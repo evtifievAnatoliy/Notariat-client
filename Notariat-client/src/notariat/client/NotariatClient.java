@@ -5,17 +5,41 @@
  */
 package notariat.client;
 
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javax.swing.GroupLayout;
+
 /**
  *
  * @author eag
  */
-public class NotariatClient {
+public class NotariatClient extends Application{
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Application.launch();
+        
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        stage.setTitle("Нотариат: " + "НК2");
+        stage.setWidth(500);
+        stage.setHeight(400);
+        
+        
+        Button newBtn = new Button("New Document");
+        Group group = new Group(newBtn);
+        Scene scene = new Scene(group);
+        stage.setScene(scene);
+        
+        stage.show();
     }
     
 }
