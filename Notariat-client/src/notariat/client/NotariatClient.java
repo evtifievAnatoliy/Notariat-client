@@ -5,13 +5,14 @@
  */
 package notariat.client;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javax.swing.GroupLayout;
+import notariat.client.configuration.Configuration;
 
 /**
  *
@@ -29,17 +30,24 @@ public class NotariatClient extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setTitle("Нотариат: " + "НК2");
-        stage.setWidth(500);
-        stage.setHeight(400);
+        Dimension monitorSize = Toolkit.getDefaultToolkit().getScreenSize();
+        stage.setTitle("Нотариат: " + Configuration.getInstance().getProperty("department"));
+        stage.setWidth(monitorSize.width - 100);
+        stage.setHeight(monitorSize.height - 100);
         
         
-        Button newBtn = new Button("New Document");
-        Group group = new Group(newBtn);
+        Button newBtn = new Button("Новый документ");
+        Button exitBtn = new Button("Выход");
+        
+        Group group = new Group(newBtn, exitBtn);
+        
         Scene scene = new Scene(group);
         stage.setScene(scene);
         
+        //stage.setMaximized(true);  //полноэкранный размер
         stage.show();
+        
+
     }
     
 }
