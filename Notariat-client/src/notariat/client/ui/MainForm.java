@@ -8,6 +8,8 @@ package notariat.client.ui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,9 +19,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -52,8 +58,8 @@ public class MainForm {
     private Menu  menuSettings;
     private MenuItem menuItemExit;
     //private Scene centralScene;
-    Text text; //???
-   
+    private TextArea newDocumentTextArea;
+    
     public MainForm(Stage primaryStage)throws Exception {
         
         this.primaryStage = primaryStage;
@@ -63,6 +69,7 @@ public class MainForm {
         primaryStage.setHeight(monitorSize.height - monitorSize.height/2);
         primaryStage.initStyle(StageStyle.DECORATED);
         
+        // отрисовываем меню
         MenuBar leftMenuBar = new MenuBar();
         Menu menuNewDocument = new Menu();
         labelNewDocument = new Label("Новый документ (F3)");
@@ -89,10 +96,22 @@ public class MainForm {
         
         BorderPane mainPane = new BorderPane();
         mainPane.setTop(controlPane);
+        // -------------------------------------------
         
+        // отрисовываем элемент компоновки Новый документ
+        ObservableList<String> fishesArray = FXCollections.observableArrayList("fish1", "fish2", "fish3");
+        ListView<String> fishListView = new ListView<String>();
+        fishListView.setItems(fishesArray);
+        //fishListView.setMinWidth(Region.USE_PREF_SIZE);
+        newDocumentTextArea = new TextArea();
+        SplitPane splitListFishesAndNewDocument = new SplitPane();
+        splitListFishesAndNewDocument.getItems().addAll(new ScrollPane(fishListView), new ScrollPane(newDocumentTextArea));
+        splitListFishesAndNewDocument.setDividerPositions(0.9);
+        //splitListFishesAndNewDocument.setDividerPosition(0, 200);
+        //----------------------------------------------
         
-        text = new Text("Hello from JavaFX!");
-        mainPane.setCenter(text);
+        mainPane.setCenter(splitListFishesAndNewDocument);
+        
         
         Scene scene = new Scene(mainPane);
         primaryStage.setScene(scene);
@@ -115,14 +134,14 @@ public class MainForm {
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                text.setText("New Document");
+                //text.setText("New Document");
             }
         });
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
-                    text.setText("New Document");
+                    //text.setText("New Document");
             }}
             
         });
@@ -132,7 +151,7 @@ public class MainForm {
         labelBaseWorkDay.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                text.setText("WorkDay");
+                //text.setText("WorkDay");
             }
         });
         KeyCodeCombination f9AltCodeCombination = new KeyCodeCombination(KeyCode.F9, KeyCombination.ALT_DOWN);
@@ -140,7 +159,7 @@ public class MainForm {
             @Override
             public void handle(KeyEvent event) {
                 if (f9AltCodeCombination.match(event) && event.getSource() == primaryStage){
-                    text.setText(f9AltCodeCombination.getCode().toString());
+                    //text.setText(f9AltCodeCombination.getCode().toString());
             }}
             
         });
