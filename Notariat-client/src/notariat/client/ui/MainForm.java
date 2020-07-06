@@ -23,6 +23,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
@@ -102,15 +103,20 @@ public class MainForm {
         ObservableList<String> fishesArray = FXCollections.observableArrayList("fish1", "fish2", "fish3");
         ListView<String> fishListView = new ListView<String>();
         fishListView.setItems(fishesArray);
-        //fishListView.setMinWidth(Region.USE_PREF_SIZE);
+        double fishListViewWight = monitorSize.getWidth()/5;
+        fishListView.setMinWidth(fishListViewWight);
+        fishListView.setMaxWidth(fishListViewWight);
+        
+        
         newDocumentTextArea = new TextArea();
-        SplitPane splitListFishesAndNewDocument = new SplitPane();
-        splitListFishesAndNewDocument.getItems().addAll(new ScrollPane(fishListView), new ScrollPane(newDocumentTextArea));
-        splitListFishesAndNewDocument.setDividerPositions(0.9);
-        //splitListFishesAndNewDocument.setDividerPosition(0, 200);
+        SplitPane splitPaneListFishesAndNewDocument = new SplitPane();
+        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, newDocumentTextArea);
+        splitPaneListFishesAndNewDocument.setPrefSize(mainPane.getPrefWidth(), mainPane.getPrefHeight());
+        splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
+        
         //----------------------------------------------
         
-        mainPane.setCenter(splitListFishesAndNewDocument);
+        mainPane.setCenter(splitPaneListFishesAndNewDocument);
         
         
         Scene scene = new Scene(mainPane);
@@ -134,14 +140,14 @@ public class MainForm {
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //text.setText("New Document");
+                newDocumentTextArea.setText("New Document");
             }
         });
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
-                    //text.setText("New Document");
+                    newDocumentTextArea.setText("New Document");
             }}
             
         });
@@ -151,7 +157,7 @@ public class MainForm {
         labelBaseWorkDay.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //text.setText("WorkDay");
+                newDocumentTextArea.setText("WorkDay");
             }
         });
         KeyCodeCombination f9AltCodeCombination = new KeyCodeCombination(KeyCode.F9, KeyCombination.ALT_DOWN);
@@ -159,7 +165,7 @@ public class MainForm {
             @Override
             public void handle(KeyEvent event) {
                 if (f9AltCodeCombination.match(event) && event.getSource() == primaryStage){
-                    //text.setText(f9AltCodeCombination.getCode().toString());
+                    newDocumentTextArea.setText(f9AltCodeCombination.getCode().toString());
             }}
             
         });
