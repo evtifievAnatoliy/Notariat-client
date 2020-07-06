@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -21,6 +20,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -43,14 +46,17 @@ import notariat.client.configuration.Configuration;
  */
 public class MainForm {
     
+    private Stage primaryStage;
     private Label labelNewDocument;
     private Label labelBaseWorkDay;
     private Menu  menuSettings;
     private MenuItem menuItemExit;
+    //private Scene centralScene;
     Text text; //???
    
     public MainForm(Stage primaryStage)throws Exception {
         
+        this.primaryStage = primaryStage;
         Dimension monitorSize = Toolkit.getDefaultToolkit().getScreenSize();
         primaryStage.setTitle("Нотариат: " + Configuration.getInstance().getProperty("department"));
         primaryStage.setWidth(monitorSize.width - monitorSize.width/2);
@@ -59,9 +65,9 @@ public class MainForm {
         
         MenuBar leftMenuBar = new MenuBar();
         Menu menuNewDocument = new Menu();
-        labelNewDocument = new Label("Новый документ");
+        labelNewDocument = new Label("Новый документ (F3)");
         menuNewDocument.setGraphic(labelNewDocument);
-        labelBaseWorkDay = new Label("База рабочего дня");
+        labelBaseWorkDay = new Label("База рабочего дня (Alt-F9)");
         Menu menuBaseWorkDay = new Menu();
         menuBaseWorkDay.setGraphic(labelBaseWorkDay);
         leftMenuBar.getMenus().add(menuNewDocument);
@@ -83,6 +89,8 @@ public class MainForm {
         
         BorderPane mainPane = new BorderPane();
         mainPane.setTop(controlPane);
+        
+        
         text = new Text("Hello from JavaFX!");
         mainPane.setCenter(text);
         
@@ -102,24 +110,43 @@ public class MainForm {
               System.exit(0);
             }
         });
+        
+        // события при нажатии меню "Новый документ"
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 text.setText("New Document");
             }
         });
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
+                    text.setText("New Document");
+            }}
+            
+        });
+        //----------------------------------------------------------------
+        
+        // события при нажатии меню "База рабочего дня"
         labelBaseWorkDay.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 text.setText("WorkDay");
             }
         });
-        
-        
-      
+        KeyCodeCombination f9AltCodeCombination = new KeyCodeCombination(KeyCode.F9, KeyCombination.ALT_DOWN);
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+            @Override
+            public void handle(KeyEvent event) {
+                if (f9AltCodeCombination.match(event) && event.getSource() == primaryStage){
+                    text.setText(f9AltCodeCombination.getCode().toString());
+            }}
+            
+        });
+        //------------------------------------------------------------------
         
     }
 
-   
     
 }
