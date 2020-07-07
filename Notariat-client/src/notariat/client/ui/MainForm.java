@@ -13,9 +13,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -40,6 +42,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -58,7 +61,8 @@ public class MainForm {
     private Label labelBaseWorkDay;
     private Menu  menuSettings;
     private MenuItem menuItemExit;
-    //private Scene centralScene;
+    private StackPane mainStackPane;
+    private SplitPane splitPaneListFishesAndNewDocument;
     private TextArea newDocumentTextArea;
     
     public MainForm(Stage primaryStage)throws Exception {
@@ -99,24 +103,36 @@ public class MainForm {
         mainPane.setTop(controlPane);
         // -------------------------------------------
         
-        // отрисовываем элемент компоновки Новый документ
-        ObservableList<String> fishesArray = FXCollections.observableArrayList("fish1", "fish2", "fish3");
+        // отрисовываем элементы компановки StackPane. Окна будут находится на разных слоях
+                
+        // отрисовываем слой Новый документ
+        ObservableList<String> fishesArray = FXCollections.observableArrayList("fish3", "fish1", "fish2", "fish3", "fish1", "fish2", "fish3", 
+                                                        "fish1", "fish2", "fish3", "fish1", "fish2", "fish3","fish1", "fish2", "fish3", "fish1", 
+                                                        "fish2", "fish3", "fish1", "fish2", "fish3", "fish1", "fish2", "fish3", "fish1", "fish2", 
+                                                        "fish3", "fish1", "fish2", "fish3","fish1", "fish2", "fish3", "fish1", "fish2", "fish3", 
+                                                        "fish1", "fish2", "fish3", "fish1", "fish2", "fish3", "fish1", "fish2", "fish3");
         ListView<String> fishListView = new ListView<String>();
         fishListView.setItems(fishesArray);
         double fishListViewWight = monitorSize.getWidth()/5;
         fishListView.setMinWidth(fishListViewWight);
-        fishListView.setMaxWidth(fishListViewWight);
-        
+        fishListView.setMaxWidth(fishListViewWight*3/2);
         
         newDocumentTextArea = new TextArea();
-        SplitPane splitPaneListFishesAndNewDocument = new SplitPane();
-        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, newDocumentTextArea);
+        newDocumentTextArea.setMinWidth(fishListViewWight/2*7);
+        newDocumentTextArea.setMaxWidth(fishListViewWight/2*7);
+        
+        splitPaneListFishesAndNewDocument = new SplitPane();
+        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, new BorderPane(newDocumentTextArea));
         splitPaneListFishesAndNewDocument.setPrefSize(mainPane.getPrefWidth(), mainPane.getPrefHeight());
         splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
+        //----------------------------------------------
+
+        mainStackPane = new StackPane();
+        //mainStackPane.getChildren().add(splitPaneListFishesAndNewDocument);
+        
         
         //----------------------------------------------
-        
-        mainPane.setCenter(splitPaneListFishesAndNewDocument);
+        mainPane.setCenter(mainStackPane);
         
         
         Scene scene = new Scene(mainPane);
@@ -140,14 +156,14 @@ public class MainForm {
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                newDocumentTextArea.setText("New Document");
+                setStackPane(splitPaneListFishesAndNewDocument);
             }
         });
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
-                    newDocumentTextArea.setText("New Document");
+                    setStackPane(splitPaneListFishesAndNewDocument);
             }}
             
         });
@@ -157,7 +173,7 @@ public class MainForm {
         labelBaseWorkDay.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                newDocumentTextArea.setText("WorkDay");
+                setStackPane(newDocumentTextArea);
             }
         });
         KeyCodeCombination f9AltCodeCombination = new KeyCodeCombination(KeyCode.F9, KeyCombination.ALT_DOWN);
@@ -165,12 +181,18 @@ public class MainForm {
             @Override
             public void handle(KeyEvent event) {
                 if (f9AltCodeCombination.match(event) && event.getSource() == primaryStage){
-                    newDocumentTextArea.setText(f9AltCodeCombination.getCode().toString());
+                    setStackPane(newDocumentTextArea);
             }}
             
         });
         //------------------------------------------------------------------
         
+    }
+    
+    public void setStackPane(Node pane) {
+            if (mainStackPane.getChildren() != null)
+                mainStackPane.getChildren().clear();
+            mainStackPane.getChildren().add(pane);
     }
 
     
