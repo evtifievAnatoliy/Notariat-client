@@ -17,26 +17,47 @@ public class Document {
         private int id;
         private final LocalDate DOC_DATE;
         private final LocalTime DOC_TIME;
-        private String DocRegnum;
-        private String ActCode;
-        private String ActCodeAttribute;
-        private String DocName;
-        private String DocBody;
-        private String Duty;
-        private String Services;
-        private String DocMash;
-        private int DocState;
-        private String DocPath;
-        private String DocNotarius;
-        private String DocActionNotarius;
+        private String docRegnum;
+        private String actCode;
+        private String actCodeAttribute;
+        private String docName;
+        private String docBody;
+        private String duty;
+        private String services;
+        private String docMash;
+        private int docState;
+        private String docPath;
+        private String docNotarius;
+        private String docActionNotarius;
         
-        private String Person;
+        private String person;
 
-    public Document(LocalDate docDate, LocalTime docTime, String DocName, String Person) {
+    public Document(LocalDate docDate, LocalTime docTime, String DocName, String Person , String docMash) {
         this.DOC_DATE = docDate;
         this.DOC_TIME = docTime;
-        this.DocName = DocName;
-        this.Person = Person;
+        this.docName = DocName;
+        this.person = Person;
+        this.docMash = docMash;
+    }
+
+    public LocalDate getDOC_DATE() {
+        return DOC_DATE;
+    }
+
+    public LocalTime getDOC_TIME() {
+        return DOC_TIME;
+    }
+
+    public String getDocName() {
+        return docName;
+    }
+
+    public String getDocMash() {
+        return docMash;
+    }
+
+    public String getPerson() {
+        return person;
     }
         
         

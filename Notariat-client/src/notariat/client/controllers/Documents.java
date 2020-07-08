@@ -21,9 +21,9 @@ public class Documents {
     public Documents() {
         
         documents = new ArrayList<Document>();
-        documents.add(new Document(LocalDate.now(), LocalTime.now(), "Дов.- На распоряжение", "Ляднов Т.И, Зубрина О.С."));
-        documents.add(new Document(LocalDate.now(), LocalTime.now(), "Дов.- Прочие", "Иванов И.В."));
-        documents.add(new Document(LocalDate.now(), LocalTime.now(), "Дов.- Представитель", "Палуга И.А., Сосногорск К.А."));
+        documents.add(new Document(LocalDate.now(), LocalTime.now(), "Дов.- На распоряжение", "Ляднов Т.И, Зубрина О.С.", "68"));
+        documents.add(new Document(LocalDate.now(), LocalTime.now(), "Дов.- Прочие", "Иванов И.В.", "68"));
+        documents.add(new Document(LocalDate.now(), LocalTime.now(), "Дов.- Представитель", "Палуга И.А., Сосногорск К.А.",  "68"));
         
     }
 

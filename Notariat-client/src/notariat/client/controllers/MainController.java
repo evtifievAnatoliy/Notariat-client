@@ -14,10 +14,12 @@ public class MainController {
 
     private static MainController instance;
     private Documents documents;
+    private Fishes fishes;
 
     public MainController() {
         
         documents = new Documents();
+        fishes = new Fishes();
         
     }
     
@@ -31,5 +33,15 @@ public class MainController {
         }
         return instance;
     }
+
+    public Documents getDocuments() {
+        return documents;
+    }
+
+    public Fishes getFishes() {
+        return fishes;
+    }
+    
+    
     
 }
