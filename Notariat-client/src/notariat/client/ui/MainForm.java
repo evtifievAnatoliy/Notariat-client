@@ -49,12 +49,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
+import notariat.client.controllers.MainController;
 
 /**
  *
  * @author eag
  */
 public class MainForm {
+    
+    MainController mainController;
     
     private Stage primaryStage;
     private Label labelNewDocument;
@@ -66,6 +69,8 @@ public class MainForm {
     private TextArea newDocumentTextArea;
     
     public MainForm(Stage primaryStage)throws Exception {
+        
+        mainController = MainController.getInstance();
         
         this.primaryStage = primaryStage;
         Dimension monitorSize = Toolkit.getDefaultToolkit().getScreenSize();
