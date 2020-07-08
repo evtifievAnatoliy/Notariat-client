@@ -58,11 +58,13 @@ public class MainForm {
         
         this.primaryStage = primaryStage;
         Dimension monitorSize = Toolkit.getDefaultToolkit().getScreenSize();
-        mainWindowWidth = monitorSize.getWidth();
         primaryStage.setTitle("Нотариат: " + Configuration.getInstance().getProperty("department"));
-        primaryStage.setWidth(monitorSize.width - monitorSize.width/2);
-        primaryStage.setHeight(monitorSize.height - monitorSize.height/2);
+        primaryStage.setWidth(monitorSize.width - monitorSize.width/8);
+        primaryStage.setHeight(monitorSize.height - monitorSize.height/8);
         primaryStage.initStyle(StageStyle.DECORATED);
+        mainWindowWidth = monitorSize.getWidth(); //от ширины разрешения экрана
+        //mainWindowWidth = primaryStage.getWidth(); //от ширины окна приложения
+        
         
         // отрисовываем меню
         MenuBar leftMenuBar = new MenuBar();
@@ -282,7 +284,8 @@ public class MainForm {
                 if (event.getClickCount() >1){
                     mainStackPane.getChildren().add(documentFromBaseTextArea);
                     // пока в documentFromBaseTextArea пишем название выбранного документа, в будущем нужно вставлять сам документ
-                    documentFromBaseTextArea.setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" +tableViewSelectionModel.getSelectedItem().getPerson() + "\n Содержание");
+                    documentFromBaseTextArea.setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" 
+                            + tableViewSelectionModel.getSelectedItem().getPerson() + "\n Содержание");
                     documentFromBaseTextArea.requestFocus();
                 }
             }
@@ -293,7 +296,8 @@ public class MainForm {
                 if (event.getCode() == KeyCode.ENTER){ 
                     mainStackPane.getChildren().add(documentFromBaseTextArea);
                     // пока в documentFromBaseTextArea пишем название выбранного документа, в будущем нужно вставлять сам документ
-                    documentFromBaseTextArea.setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" +tableViewSelectionModel.getSelectedItem().getPerson() + "\n Содержание");
+                    documentFromBaseTextArea.setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" 
+                            + tableViewSelectionModel.getSelectedItem().getPerson() + "\n Содержание");
                     documentFromBaseTextArea.requestFocus();
                 }
             }
