@@ -8,6 +8,8 @@ package notariat.client.ui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +27,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -66,6 +69,7 @@ public class MainForm {
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
     private SplitPane splitPaneListFishesAndNewDocument;
+    private ListView<String> fishListView;
     private TextArea newDocumentTextArea;
     
     public MainForm(Stage primaryStage)throws Exception {
@@ -111,16 +115,16 @@ public class MainForm {
         // отрисовываем элементы компановки StackPane. Окна будут находится на разных слоях
                 
         // отрисовываем слой Новый документ
-        ObservableList<String> fishesArray = FXCollections.observableArrayList("fish3", "fish1", "fish2", "fish3", "fish1", "fish2", "fish3", 
-                                                        "fish1", "fish2", "fish3", "fish1", "fish2", "fish3","fish1", "fish2", "fish3", "fish1", 
-                                                        "fish2", "fish3", "fish1", "fish2", "fish3", "fish1", "fish2", "fish3", "fish1", "fish2", 
-                                                        "fish3", "fish1", "fish2", "fish3","fish1", "fish2", "fish3", "fish1", "fish2", "fish3", 
-                                                        "fish1", "fish2", "fish3", "fish1", "fish2", "fish3", "fish1", "fish2", "fish3");
-        ListView<String> fishListView = new ListView<String>();
+        ObservableList<String> fishesArray = FXCollections.observableArrayList("Доверенность на распоряжение счетом", "Доверенность на распоряжение счетом (Общая)", 
+                                                        "Доверенность на распоряжение счетом (Сбербанк)", "Доверенность на распоряжение вкладом", "Доверенность на распоряжение вкладом (пенсия)",
+                                                        "Доверенность на распоряжение картой", "Доверенность на получение з/п", 
+                                                        "Доверенность на ведение дел в суде", "Доверенность на ведение дел в суде (Арбитраж)", "Доверенность на ведение дел в суде (общая)", 
+                                                        "Доверенность на ведение дел в суде (Уголовные дела)", "Доверенность на получении пособия", "Доверенность (образцы)");
+        fishListView = new ListView<String>();
         fishListView.setItems(fishesArray);
         double fishListViewWight = monitorSize.getWidth()/5;
         fishListView.setMinWidth(fishListViewWight);
-        fishListView.setMaxWidth(fishListViewWight*3/2);
+        fishListView.setMaxWidth(fishListViewWight);
         
         newDocumentTextArea = new TextArea();
         newDocumentTextArea.setMinWidth(fishListViewWight/2*7);
@@ -148,6 +152,7 @@ public class MainForm {
         primaryStage.setMaximized(true);  //полноэкранный размер
         primaryStage.show();
     }
+    
     private void initializationOfAllActionListeners(){
         
         menuItemExit.setOnAction(new EventHandler<ActionEvent>() {
@@ -170,7 +175,6 @@ public class MainForm {
                 if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
                     setStackPane(splitPaneListFishesAndNewDocument);
             }}
-            
         });
         //----------------------------------------------------------------
         
@@ -188,7 +192,20 @@ public class MainForm {
                 if (f9AltCodeCombination.match(event) && event.getSource() == primaryStage){
                     setStackPane(newDocumentTextArea);
             }}
+        });
+        //------------------------------------------------------------------
+        
+        // событие при выборе элемента в fishListView
+        MultipleSelectionModel<String> langsSelectionModel = fishListView.getSelectionModel();
+        // устанавливаем слушатель для отслеживания изменений
+        langsSelectionModel.selectedItemProperty().addListener(new ChangeListener<String>(){
             
+            @Override
+            public void changed(ObservableValue<? extends String> changed, String oldValue, String newValue){
+                 
+                // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
+                newDocumentTextArea.setText(newValue);
+            }
         });
         //------------------------------------------------------------------
         
