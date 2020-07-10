@@ -52,6 +52,11 @@ public class MainForm {
     private ListView<Fish> fishListView;
     private TextArea newDocumentTextArea;
     private TableView<Document> workDayTableView;
+    private TableColumn<Document, LocalDate> dateColumn;
+    private TableColumn<Document, LocalDate> nameDocumentColumn;
+    private TableColumn<Document, LocalDate> personColumn;
+    private TableColumn<Document, LocalDate> mashColumn;
+    private TableColumn<Document, LocalTime> timeColumn;
     private TextArea documentFromBaseTextArea;
     
     public MainForm(Stage primaryStage)throws Exception {
@@ -104,19 +109,12 @@ public class MainForm {
         ObservableList<Fish> fishesArray = FXCollections.observableArrayList(mainController.getFishes().getFishes());
         fishListView = new ListView<Fish>();
         fishListView.setItems(fishesArray);
-        double fishListViewWight = mainWindowWidth/5;
-        fishListView.setMinWidth(fishListViewWight);
-        fishListView.setMaxWidth(fishListViewWight);
-        
-        double textAreaWight = fishListViewWight/2*7;
         newDocumentTextArea = new TextArea();
-        newDocumentTextArea.setMinWidth(textAreaWight);
-        newDocumentTextArea.setMaxWidth(textAreaWight);
         
         splitPaneListFishesAndNewDocument = new SplitPane();
         splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, new BorderPane(newDocumentTextArea));
         splitPaneListFishesAndNewDocument.setPrefSize(mainPane.getPrefWidth(), mainPane.getPrefHeight());
-        splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
+        
         //----------------------------------------------
         
         // отрисовываем слой База рабочего дня 
@@ -124,43 +122,35 @@ public class MainForm {
         
         workDayTableView = new TableView<Document>(documents);
         workDayTableView.setEditable(false);
-        double workDayTableViewWight = mainWindowWidth;
-        workDayTableView.setMinWidth(workDayTableViewWight);
-        workDayTableView.setMaxWidth(workDayTableViewWight);
+        
         
         // столбец для вывода
-        TableColumn<Document, LocalDate> dateColumn = new TableColumn<Document, LocalDate>("Дата");
+        dateColumn = new TableColumn<Document, LocalDate>("Дата");
         // определяем фабрику для столбца с привязкой к свойству
         dateColumn.setCellValueFactory(new PropertyValueFactory<Document, LocalDate>("DOC_DATE"));
-        dateColumn.setMinWidth(workDayTableViewWight/10);
         workDayTableView.getColumns().add(dateColumn);
         
-        TableColumn<Document, LocalDate> nameDocumentColumn = new TableColumn<Document, LocalDate>("Документ");
+        nameDocumentColumn = new TableColumn<Document, LocalDate>("Документ");
         nameDocumentColumn.setCellValueFactory(new PropertyValueFactory<Document, LocalDate>("docName"));
-        nameDocumentColumn.setMinWidth(workDayTableViewWight/10*2);
         workDayTableView.getColumns().add(nameDocumentColumn);
         
-        TableColumn<Document, LocalDate> personColumn = new TableColumn<Document, LocalDate>("ФИО клиентов");
+        personColumn = new TableColumn<Document, LocalDate>("ФИО клиентов");
         personColumn.setCellValueFactory(new PropertyValueFactory<Document, LocalDate>("person"));
-        personColumn.setMinWidth(workDayTableViewWight/10*5);
         workDayTableView.getColumns().add(personColumn);
         
-        TableColumn<Document, LocalDate> mashColumn = new TableColumn<Document, LocalDate>("M");
+        mashColumn = new TableColumn<Document, LocalDate>("M");
         mashColumn.setCellValueFactory(new PropertyValueFactory<Document, LocalDate>("docMash"));
-        mashColumn.setMinWidth(workDayTableViewWight/10);
         workDayTableView.getColumns().add(mashColumn);
         
-        TableColumn<Document, LocalTime> timeColumn = new TableColumn<Document, LocalTime>("Время");
+        timeColumn = new TableColumn<Document, LocalTime>("Время");
         timeColumn.setCellValueFactory(new PropertyValueFactory<Document, LocalTime>("DOC_TIME"));
-        timeColumn.setMinWidth(workDayTableViewWight/10);
         workDayTableView.getColumns().add(timeColumn);
         //----------------------------------------------
         
         // отрисовываем слой documentFromBaseTextArea
         
         documentFromBaseTextArea = new TextArea();
-        documentFromBaseTextArea.setMinWidth(textAreaWight);
-        documentFromBaseTextArea.setMaxWidth(textAreaWight);
+        
         
         // ---------------------------------------------
         
@@ -175,11 +165,41 @@ public class MainForm {
         Scene scene = new Scene(mainPane);
         primaryStage.setScene(scene);
         
+        setSizeOfComponentsInMainStage(mainWindowWidth);
         initializationOfAllActionListeners();
-        
         primaryStage.setMaximized(true);  //полноэкранный размер
+        
         primaryStage.show();
     }
+    private void setSizeOfComponentsInMainStage(double windowWight){
+        
+        // устанавливаем размеры компонентов слоя Новый документ
+        double fishListViewWight = windowWight/5;
+        fishListView.setMinWidth(fishListViewWight);
+        fishListView.setMaxWidth(fishListViewWight);
+        double textAreaWight = fishListViewWight/2*7;
+        newDocumentTextArea.setMinWidth(textAreaWight);
+        newDocumentTextArea.setMaxWidth(textAreaWight);
+        splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
+        //-------------------------------------------------------
+        
+        // устанавливаем размеры компонентов слоя documentFromBaseTextArea
+        documentFromBaseTextArea.setMinWidth(textAreaWight);
+        documentFromBaseTextArea.setMaxWidth(textAreaWight);
+        // ------------------------------------------------------
+
+        // устанавливаем размеры компонентов слоя  workDayTableView
+        double workDayTableViewWight = windowWight;
+        workDayTableView.setMinWidth(workDayTableViewWight);
+        workDayTableView.setMaxWidth(workDayTableViewWight);
+        dateColumn.setMinWidth(workDayTableViewWight/10);
+        nameDocumentColumn.setMinWidth(workDayTableViewWight/10*2);
+        personColumn.setMinWidth(workDayTableViewWight/10*5);
+        mashColumn.setMinWidth(workDayTableViewWight/10);
+        timeColumn.setMinWidth(workDayTableViewWight/10);
+        //-------------------------------------------------------
+    }
+    
     
     private void initializationOfAllActionListeners(){
         
@@ -318,10 +338,8 @@ public class MainForm {
         primaryStage.widthProperty().addListener(new ChangeListener<Number>(){
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.initOwner(primaryStage);
-                alert.setContentText(oldValue + " : " + newValue);
-                alert.showAndWait();
+                setSizeOfComponentsInMainStage(newValue.doubleValue());
+                
             }
             
         });
