@@ -23,7 +23,12 @@ public class NotariatClient extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        MainForm mainForm = new MainForm(primaryStage);
+        try{
+            MainForm mainForm = new MainForm(primaryStage);
+        }
+        catch(Exception ex){
+            // запись в лог
+        }
     }
 
     
