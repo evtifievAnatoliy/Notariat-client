@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +25,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
@@ -311,7 +314,19 @@ public class MainForm {
             }
         });
         //------------------------------------------------------------------
-        
+        // событие при изменении размеров главного окна
+        primaryStage.widthProperty().addListener(new ChangeListener<Number>(){
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.initOwner(primaryStage);
+                alert.setContentText(oldValue + " : " + newValue);
+                alert.showAndWait();
+            }
+            
+        });
+            
+        //------------------------------------------------------------------
     }
     
     public void setStackPane(Node node) {
