@@ -25,7 +25,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
@@ -193,10 +192,15 @@ public class MainForm {
         workDayTableView.setMinWidth(workDayTableViewWight);
         workDayTableView.setMaxWidth(workDayTableViewWight);
         dateColumn.setMinWidth(workDayTableViewWight/10);
+        dateColumn.setMaxWidth(workDayTableViewWight/10);
         nameDocumentColumn.setMinWidth(workDayTableViewWight/10*2);
+        nameDocumentColumn.setMaxWidth(workDayTableViewWight/10*2);
         personColumn.setMinWidth(workDayTableViewWight/10*5);
+        personColumn.setMaxWidth(workDayTableViewWight/10*5);
         mashColumn.setMinWidth(workDayTableViewWight/10);
+        mashColumn.setMaxWidth(workDayTableViewWight/10);
         timeColumn.setMinWidth(workDayTableViewWight/10);
+        timeColumn.setMaxWidth(workDayTableViewWight/10);
         //-------------------------------------------------------
     }
     
