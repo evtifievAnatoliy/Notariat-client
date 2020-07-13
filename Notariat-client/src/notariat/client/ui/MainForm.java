@@ -30,7 +30,6 @@ import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
 import notariat.client.models.Document;
-import notariat.client.models.Fish;
 
 /**
  *
@@ -38,8 +37,8 @@ import notariat.client.models.Fish;
  */
 public class MainForm {
     
-    MainController mainController;
-    double mainWindowWidth;
+    private MainController mainController;
+    private double mainWindowWidth;
     
     private Stage primaryStage;
     private Label labelNewDocument;
@@ -47,9 +46,7 @@ public class MainForm {
     private Menu  menuSettings;
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
-    private SplitPane splitPaneListFishesAndNewDocument;
-    private ListView<Fish> fishListView;
-    private TextArea newDocumentTextArea;
+    
     private TableView<Document> workDayTableView;
     private TableColumn<Document, LocalDate> dateColumn;
     private TableColumn<Document, LocalDate> nameDocumentColumn;
@@ -57,6 +54,8 @@ public class MainForm {
     private TableColumn<Document, LocalDate> mashColumn;
     private TableColumn<Document, LocalTime> timeColumn;
     private TextArea documentFromBaseTextArea;
+    
+    SplitPaneListFishAndNewDocument splitPaneListFishAndNewDocument;
     
     public MainForm(Stage primaryStage)throws Exception {
         
@@ -105,14 +104,8 @@ public class MainForm {
         // отрисовываем элементы компановки StackPane. Окна будут находится на разных слоях
                 
         // отрисовываем слой Новый документ
-        ObservableList<Fish> fishesArray = FXCollections.observableArrayList(mainController.getFishes().getFishes());
-        fishListView = new ListView<Fish>();
-        fishListView.setItems(fishesArray);
-        newDocumentTextArea = new TextArea();
         
-        splitPaneListFishesAndNewDocument = new SplitPane();
-        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, new BorderPane(newDocumentTextArea));
-        splitPaneListFishesAndNewDocument.setPrefSize(mainPane.getPrefWidth(), mainPane.getPrefHeight());
+        splitPaneListFishAndNewDocument = new SplitPaneListFishAndNewDocument(this, mainWindowWidth);
         
         //----------------------------------------------
         
@@ -174,12 +167,9 @@ public class MainForm {
         
         // устанавливаем размеры компонентов слоя Новый документ
         double fishListViewWight = windowWight/5;
-        fishListView.setMinWidth(fishListViewWight);
-        fishListView.setMaxWidth(fishListViewWight);
         double textAreaWight = fishListViewWight/2*7;
-        newDocumentTextArea.setMinWidth(textAreaWight);
-        newDocumentTextArea.setMaxWidth(textAreaWight);
-        splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
+        
+        splitPaneListFishAndNewDocument.setSizeOfComponents(windowWight);
         //-------------------------------------------------------
         
         // устанавливаем размеры компонентов слоя documentFromBaseTextArea
@@ -219,28 +209,20 @@ public class MainForm {
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                setStackPane(splitPaneListFishesAndNewDocument);
+                setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
             }
         });
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
-                    setStackPane(splitPaneListFishesAndNewDocument);
+                    setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
                 }
             }
         });
         //----------------------------------------------------------------
-        //событие при нажатии Esc в newDocumentTextArea
-        newDocumentTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE){ 
-                    fishListView.requestFocus();
-                }
-            }
-        });
-        //----------------------------------------------------------------
+        
+        
         //событие при нажатии Esc в documentTextArea
         documentFromBaseTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
             @Override
@@ -270,37 +252,7 @@ public class MainForm {
         });
         //------------------------------------------------------------------
         
-        // событие при выборе элемента в fishListView
-        MultipleSelectionModel<Fish> fishListViewSelectionModel = fishListView.getSelectionModel();
-        fishListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() >0){ //>1 для двойного нажатия
-                    // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
-                    newDocumentTextArea.setText(fishListViewSelectionModel.getSelectedItem().toString());
-                    newDocumentTextArea.requestFocus();
-                }
-            }
-        });
-        fishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER){ 
-                    // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
-                    newDocumentTextArea.setText(fishListViewSelectionModel.getSelectedItem().toString());
-                    newDocumentTextArea.requestFocus();
-                }
-            }
-        });
-        fishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE){ 
-                    removeLastStackPane();
-                }
-            }
-        });
-        //------------------------------------------------------------------
+        
         
         // событие при выборе элемента в workDayTableView
         TableView.TableViewSelectionModel<Document> tableViewSelectionModel = workDayTableView.getSelectionModel();  
