@@ -33,7 +33,6 @@ public class SplitPaneListFishAndNewDocument{
     private TextArea newDocumentTextArea;
     private MainForm mainForm;
     
-
     public SplitPaneListFishAndNewDocument(MainForm mainForm, double wight) {
         this.mainWindowWidth = wight;
         this.mainForm = mainForm;

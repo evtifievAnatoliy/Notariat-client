@@ -41,16 +41,12 @@ public class MainForm {
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
     
-    
-    
-    
     private SplitPaneListFishAndNewDocument splitPaneListFishAndNewDocument;
     private WorkDayTableView workDayTableView;
     private DocumentTextArea documentFromBaseTextArea;
     
     public MainForm(Stage primaryStage)throws Exception {
-        
-        
+    
         mainController = MainController.getInstance();
         
         this.primaryStage = primaryStage;
@@ -96,21 +92,16 @@ public class MainForm {
                 
         // отрисовываем слой Новый документ
         splitPaneListFishAndNewDocument = new SplitPaneListFishAndNewDocument(this, mainWindowWidth);
-        //----------------------------------------------
         
         // отрисовываем слой База рабочего дня 
         workDayTableView = new WorkDayTableView(this, mainWindowWidth);
-        //----------------------------------------------
         
         // отрисовываем слой documentFromBaseTextArea
         documentFromBaseTextArea = new DocumentTextArea(this, mainWindowWidth);
-        // ---------------------------------------------
-        
         
         mainStackPane = new StackPane();
-        
-        
         //----------------------------------------------
+        
         mainPane.setCenter(mainStackPane);
         
         
@@ -137,21 +128,14 @@ public class MainForm {
     private void setSizeOfComponentsInMainStage(double windowWight){
         
         // устанавливаем размеры компонентов слоя Новый документ
-        double fishListViewWight = windowWight/5;
-        double textAreaWight = fishListViewWight/2*7;
-        
         splitPaneListFishAndNewDocument.setSizeOfComponents(windowWight);
-        //-------------------------------------------------------
         
         // устанавливаем размеры компонентов слоя documentFromBaseTextArea
         documentFromBaseTextArea.setSizeOfComponents(windowWight);
-        // ------------------------------------------------------
-
-        // устанавливаем размеры компонентов слоя  workDayTableView
         
+        // устанавливаем размеры компонентов слоя  workDayTableView
         workDayTableView.setSizeOfComponents(windowWight);
         
-        //-------------------------------------------------------
     }
     
     
@@ -199,12 +183,6 @@ public class MainForm {
         });
         //------------------------------------------------------------------
         
-        
-        
-        
-        
-        
-        
         // событие при изменении размеров главного окна
         primaryStage.widthProperty().addListener(new ChangeListener<Number>(){
             @Override
@@ -214,7 +192,6 @@ public class MainForm {
             }
             
         });
-            
         //------------------------------------------------------------------
     }
     
@@ -228,8 +205,6 @@ public class MainForm {
             if (mainStackPane.getChildren().size() > 0)
                 mainStackPane.getChildren().remove(mainStackPane.getChildren().size()-1);
             
-            
     }
 
-    
 }
