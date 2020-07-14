@@ -111,11 +111,11 @@ public class WorkDayTableView {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() >1){
-                    mainForm.getMainStackPane().getChildren().add(mainForm.getDocumentFromBaseTextArea());
+                    mainForm.getMainStackPane().getChildren().add(mainForm.getDocumentFromBaseTextArea().getDocumentTextArea());
                     // пока в documentFromBaseTextArea пишем название выбранного документа, в будущем нужно вставлять сам документ
-                    mainForm.getDocumentFromBaseTextArea().setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" 
+                    mainForm.getDocumentFromBaseTextArea().getDocumentTextArea().setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" 
                             + tableViewSelectionModel.getSelectedItem().getPerson() + "\n Содержание");
-                    mainForm.getDocumentFromBaseTextArea().requestFocus();
+                    mainForm.getDocumentFromBaseTextArea().getDocumentTextArea().requestFocus();
                 }
             }
         });
@@ -123,11 +123,11 @@ public class WorkDayTableView {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER){ 
-                    mainForm.getMainStackPane().getChildren().add(mainForm.getDocumentFromBaseTextArea());
+                    mainForm.getMainStackPane().getChildren().add(mainForm.getDocumentFromBaseTextArea().getDocumentTextArea());
                     // пока в documentFromBaseTextArea пишем название выбранного документа, в будущем нужно вставлять сам документ
-                    mainForm.getDocumentFromBaseTextArea().setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" 
+                    mainForm.getDocumentFromBaseTextArea().getDocumentTextArea().setText(tableViewSelectionModel.getSelectedItem().getDocName() + "\n" 
                             + tableViewSelectionModel.getSelectedItem().getPerson() + "\n Содержание");
-                    mainForm.getDocumentFromBaseTextArea().requestFocus();
+                    mainForm.getDocumentFromBaseTextArea().getDocumentTextArea().requestFocus();
                 }
             }
         });

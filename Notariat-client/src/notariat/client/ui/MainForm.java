@@ -42,10 +42,11 @@ public class MainForm {
     private StackPane mainStackPane;
     
     
-    private TextArea documentFromBaseTextArea;
+    
     
     private SplitPaneListFishAndNewDocument splitPaneListFishAndNewDocument;
     private WorkDayTableView workDayTableView;
+    private DocumentTextArea documentFromBaseTextArea;
     
     public MainForm(Stage primaryStage)throws Exception {
         
@@ -102,7 +103,7 @@ public class MainForm {
         //----------------------------------------------
         
         // отрисовываем слой documentFromBaseTextArea
-        documentFromBaseTextArea = new TextArea();
+        documentFromBaseTextArea = new DocumentTextArea(this, mainWindowWidth);
         // ---------------------------------------------
         
         
@@ -127,7 +128,7 @@ public class MainForm {
         return mainStackPane;
     }
 
-    public TextArea getDocumentFromBaseTextArea() {
+    public DocumentTextArea getDocumentFromBaseTextArea() {
         return documentFromBaseTextArea;
     }
     
@@ -143,8 +144,7 @@ public class MainForm {
         //-------------------------------------------------------
         
         // устанавливаем размеры компонентов слоя documentFromBaseTextArea
-        documentFromBaseTextArea.setMinWidth(textAreaWight);
-        documentFromBaseTextArea.setMaxWidth(textAreaWight);
+        documentFromBaseTextArea.setSizeOfComponents(windowWight);
         // ------------------------------------------------------
 
         // устанавливаем размеры компонентов слоя  workDayTableView
@@ -201,16 +201,7 @@ public class MainForm {
         
         
         
-        //событие при нажатии Esc в documentTextArea
-        documentFromBaseTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE){ 
-                    removeLastStackPane();
-                }
-            }
-        });
-        //----------------------------------------------------------------
+        
         
         
         
