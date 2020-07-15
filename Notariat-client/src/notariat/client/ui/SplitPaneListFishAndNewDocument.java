@@ -109,6 +109,20 @@ public class SplitPaneListFishAndNewDocument{
         fishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
             @Override
             public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.F10){ 
+                    try{
+                        mainController.getFishesReaderWriter().writeFishes(mainController.getFishes().getFishes());
+                        newDocumentTextArea.getDocumentTextArea().setText("Соединение с базой данных прошло успешно.");
+                    }
+                    catch(Exception exception){
+                        newDocumentTextArea.getDocumentTextArea().setText(exception.getMessage());
+                    }
+                }
+            }
+        });
+        fishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
+            @Override
+            public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE){ 
                     mainForm.removeLastStackPane();
                 }

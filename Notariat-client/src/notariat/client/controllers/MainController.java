@@ -26,8 +26,8 @@ public class MainController {
         
         try
         {
-        fishesReaderWriter = new FishesReaderWriter();
-        fishes = new Fishes(fishesReaderWriter.readFishes());
+            fishesReaderWriter = new FishesReaderWriter();
+            fishes = new Fishes(fishesReaderWriter.readFishes());
         }
         catch (Exception ex){
             throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
@@ -51,6 +51,10 @@ public class MainController {
 
     public Fishes getFishes() {
         return fishes;
+    }
+
+    public FishesReaderWriter getFishesReaderWriter() {
+        return fishesReaderWriter;
     }
     
     

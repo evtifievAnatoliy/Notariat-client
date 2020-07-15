@@ -8,13 +8,20 @@ package notariat.client.controllers;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.SortedMap;
 import notariat.client.configuration.Configuration;
 import notariat.client.models.Fish;
@@ -24,24 +31,70 @@ import notariat.client.models.Fish;
  * @author eag
  */
 public class FishesReaderWriter {
-    /*
-    // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeItems(ArrayList<Item> items, Item newItem, ArrayList<Item> updateItems) throws IOException{
-        	
-        if (items !=null) // проверяем на наличие элементов в коллекции
-        { 
-            // пробуем записать в файл
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Configuration.getInstance().getProperty("items.Path")))){
-                for (Item item : items)
-                {
-                    bufferedWriter.write(item.toString() + "\n");
-                }       
+    
+    // метод записи в MYSQL. 
+    public void writeFishes(ArrayList<Fish> fishes) throws IOException{
+//      Connection conn = getConnection();
+        
+        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                    Configuration.getInstance().getProperty("user.Db"), 
+                    Configuration.getInstance().getProperty("password.Db"))){
+                /*
+                if (newItem != null){
+                    String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
+                    try(PreparedStatement predStat = connection.prepareStatement(report)){
+                        predStat.setObject(1, newItem.getArticle());
+                        predStat.setObject(2, newItem.getName());
+                        predStat.setObject(3, newItem.getColor());
+                        predStat.setObject(4, newItem.getPrice());
+                        predStat.setObject(5, newItem.getStockBalance());
+                        predStat.execute();
+                    }
+                }
+                if (updateItems != null){
+                    for(Item i : updateItems){
+                        String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
+                        try(PreparedStatement predStat = connection.prepareStatement(report)){
+                            predStat.setObject(1, i.getName());
+                            predStat.setObject(2, i.getColor());
+                            predStat.setObject(3, i.getPrice());
+                            predStat.setObject(4, i.getStockBalance());
+                            predStat.setObject(5, i.getArticle());
+                            predStat.execute();
+                        }
+                    }
+                }*/
+           }
+        
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Ошибка соединения с базой данных.!!!\n" + ex.getMessage());
             }
-        }
-        else
-            throw new IllegalArgumentException("Error. Товары в файл не записаны, т.к. список товаров пуст. ");
     }
-    */
+    
+    public Connection getConnection() {
+        String driver = "org.gjt.mm.mysql.Driver";
+        String url = "jdbc:mysql://192.168.250.133:3306/Notariat?characterEncoding=utf8";
+        Connection conn = null;
+        try {
+            Class.forName(driver);
+            
+            Properties connInfo = new Properties();
+            connInfo.put("user", "webadmin");
+            connInfo.put("password", "WebAdmin1");
+            connInfo.put("charSet", "utf8");
+            
+            conn = DriverManager.getConnection(url, connInfo);
+            
+            String t = "";
+            t += "";
+        } catch(Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        return conn;
+    }
+    
+    
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
     public ArrayList<Fish> readFishes() throws IOException, ParseException{
         
@@ -83,13 +136,16 @@ public class FishesReaderWriter {
                         stringBuilder.append("Шаблон пуст");
                         //break;
                     }
-                    try(BufferedReader brFish = new BufferedReader(new FileReader(fileFish))){
+                    //try(BufferedReader brFish = new BufferedReader(new FileReader(fileFish))){
+                    try(BufferedReader brFish = new BufferedReader(new InputStreamReader(new FileInputStream(fileFish), "CP866"))){
                         String strFish;
                         while((strFish = brFish.readLine()) != null){
                             
-                            byte[] bytes = strFish.getBytes(Charset.forName("CP1251"));
+                            byte[] bytes = strFish.getBytes();
                             String strFishIncoding = new String(bytes, "UTF-8");
                             stringBuilder.append(strFishIncoding);
+                            stringBuilder.append("\n");
+                            
                         }
                     }
                     catch(Exception e){
