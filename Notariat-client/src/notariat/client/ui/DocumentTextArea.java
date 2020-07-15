@@ -23,17 +23,21 @@ public class DocumentTextArea {
     private TextArea documentTextArea; 
     
     private MainForm mainForm;
-    
-    public DocumentTextArea(MainForm mainForm, double wight) {
-        this.mainWindowWidth = wight;
-        this.mainForm = mainForm;
-        
+
+    public DocumentTextArea(double mainWindowWidth) {
+        this.mainWindowWidth = mainWindowWidth;
         mainController = MainController.getInstance();
         
         documentTextArea = new TextArea();
         
         setSizeOfComponents(mainWindowWidth);
         initializationOfAllActionListeners();
+    }
+    
+    public DocumentTextArea(MainForm mainForm, double wight) {
+        this(wight);
+        this.mainForm = mainForm;
+        
     }
 
     public TextArea getDocumentTextArea() {
@@ -52,6 +56,12 @@ public class DocumentTextArea {
     private void initializationOfAllActionListeners(){
         
         //событие при нажатии Esc в documentTextArea
+        keyEventEscape();
+        //----------------------------------------------------------------
+        
+    }
+    
+    public void keyEventEscape(){
         documentTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
             @Override
             public void handle(KeyEvent event) {
@@ -60,8 +70,6 @@ public class DocumentTextArea {
                 }
             }
         });
-        //----------------------------------------------------------------
-        
-    }
+    };
     
 }

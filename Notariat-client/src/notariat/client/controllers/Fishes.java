@@ -15,22 +15,8 @@ import notariat.client.models.Fish;
 public class Fishes {
     private ArrayList<Fish> fishes;
 
-    public Fishes() {
-        
-        fishes = new ArrayList<Fish>();
-        fishes.add(new Fish("Доверенность на распоряжение счетом"));
-        fishes.add(new Fish("Доверенность на распоряжение счетом (Общая)"));
-        fishes.add(new Fish("Доверенность на распоряжение счетом (Сбербанк)"));
-        fishes.add(new Fish("Доверенность на распоряжение вкладом"));
-        fishes.add(new Fish("Доверенность на распоряжение вкладом (пенсия)"));
-        fishes.add(new Fish("Доверенность на распоряжение картой"));
-        fishes.add(new Fish("Доверенность на получение з/п"));
-        fishes.add(new Fish("Доверенность на ведение дел в суде"));
-        fishes.add(new Fish("Доверенность на ведение дел в суде (Арбитраж)"));
-        fishes.add(new Fish("Доверенность на ведение дел в суде (общая)"));
-        fishes.add(new Fish("Доверенность на ведение дел в суде (Уголовные дела)"));
-        fishes.add(new Fish("Доверенность на получении пособия"));
-        fishes.add(new Fish("Доверенность (образцы)"));
+    public Fishes(ArrayList<Fish> fishes) {
+        this.fishes = fishes;
         
     }
 

@@ -13,11 +13,17 @@ public class Fish {
     private int key;
     private String catalog_name;
     private String fish_name;
+    private String fish_body;
     private String act_code;
     private String atribute;
 
-    public Fish(String fish_name) {
+    public Fish(String fish_name, String fish_body) {
         this.fish_name = fish_name;
+        this.fish_body = fish_body;
+    }
+
+    public String getFish_body() {
+        return fish_body;
     }
 
     public String getFish_name() {

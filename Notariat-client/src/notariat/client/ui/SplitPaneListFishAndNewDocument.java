@@ -11,7 +11,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -30,8 +29,9 @@ public class SplitPaneListFishAndNewDocument{
     
     private SplitPane splitPaneListFishesAndNewDocument;
     private ListView<Fish> fishListView;
-    private TextArea newDocumentTextArea;
     private MainForm mainForm;
+    
+    private DocumentTextArea newDocumentTextArea;
     
     public SplitPaneListFishAndNewDocument(MainForm mainForm, double wight) {
         this.mainWindowWidth = wight;
@@ -42,10 +42,23 @@ public class SplitPaneListFishAndNewDocument{
         ObservableList<Fish> fishesArray = FXCollections.observableArrayList(mainController.getFishes().getFishes());
         fishListView = new ListView<Fish>();
         fishListView.setItems(fishesArray);
-        newDocumentTextArea = new TextArea();
+        newDocumentTextArea = new DocumentTextArea(mainWindowWidth) {
+            @Override
+            public void keyEventEscape() {
+                getDocumentTextArea().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
+                @Override
+                    public void handle(KeyEvent event) {
+                        if (event.getCode() == KeyCode.ESCAPE){ 
+                            fishListView.requestFocus();
+                        }
+                    }       
+                });
+            }
+            
+        };
         
         splitPaneListFishesAndNewDocument = new SplitPane();
-        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, new BorderPane(newDocumentTextArea));
+        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, new BorderPane(newDocumentTextArea.getDocumentTextArea()));
         
         setSizeOfComponents(mainWindowWidth);
         initializationOfAllActionListeners();
@@ -63,25 +76,13 @@ public class SplitPaneListFishAndNewDocument{
         fishListView.setMinWidth(fishListViewWight);
         fishListView.setMaxWidth(fishListViewWight);
         double textAreaWight = fishListViewWight/2*7;
-        newDocumentTextArea.setMinWidth(textAreaWight);
-        newDocumentTextArea.setMaxWidth(textAreaWight);
+        newDocumentTextArea.getDocumentTextArea().setMinWidth(textAreaWight);
+        newDocumentTextArea.getDocumentTextArea().setMaxWidth(textAreaWight);
         splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
         //-------------------------------------------------------
     }
     
      private void initializationOfAllActionListeners(){
-         
-         
-        //событие при нажатии Esc в newDocumentTextArea
-        newDocumentTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE){ 
-                    fishListView.requestFocus();
-                }
-            }
-        });
-        //----------------------------------------------------------------
          
         // событие при выборе элемента в fishListView
         MultipleSelectionModel<Fish> fishListViewSelectionModel = fishListView.getSelectionModel();
@@ -90,8 +91,8 @@ public class SplitPaneListFishAndNewDocument{
             public void handle(MouseEvent event) {
                 if (event.getClickCount() >0){ //>1 для двойного нажатия
                     // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
-                    newDocumentTextArea.setText(fishListViewSelectionModel.getSelectedItem().toString());
-                    newDocumentTextArea.requestFocus();
+                    newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
+                    newDocumentTextArea.getDocumentTextArea().requestFocus();
                 }
             }
         });
@@ -100,8 +101,8 @@ public class SplitPaneListFishAndNewDocument{
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER){ 
                     // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
-                    newDocumentTextArea.setText(fishListViewSelectionModel.getSelectedItem().toString());
-                    newDocumentTextArea.requestFocus();
+                    newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
+                    newDocumentTextArea.getDocumentTextArea().requestFocus();
                 }
             }
         });

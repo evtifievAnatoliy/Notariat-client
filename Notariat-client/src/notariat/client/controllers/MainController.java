@@ -5,6 +5,8 @@
  */
 package notariat.client.controllers;
 
+import java.io.IOException;
+
 /**
  *
  * @author eag
@@ -15,12 +17,21 @@ public class MainController {
     private static MainController instance;
     private Documents documents;
     private Fishes fishes;
-
-    public MainController() {
+    
+    private FishesReaderWriter fishesReaderWriter;
+    
+    public MainController() throws IOException {
         
         documents = new Documents();
-        fishes = new Fishes();
         
+        try
+        {
+        fishesReaderWriter = new FishesReaderWriter();
+        fishes = new Fishes(fishesReaderWriter.readFishes());
+        }
+        catch (Exception ex){
+            throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
+        }
     }
     
     public static MainController getInstance() {
