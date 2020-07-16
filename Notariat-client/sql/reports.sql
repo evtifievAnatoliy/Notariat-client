@@ -1,8 +1,19 @@
-CREATE TABLE 'CATEGORY_FISHES' (
-    'id' int(11) NOT NULL,
-    'name' varchar(150) NOT NULL,
-    PRIMARY KEY ('id')
+SET NAMES 'UTF8';
+
+CREATE TABLE CATEGORY_FISHES (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    cod_vdovkin int(3) NOT NULL,
+    name varchar(150) NOT NULL,
+    PRIMARY KEY (id)
     );
+
+DROP TABLE CATEGORY_FISHES;
+
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (1,'Договоры');
+SELECT * FROM CATEGORY_FISHES;
+DELETE FROM CATEGORY_FISHES;
+
+//-------------------------------------------------------------------
 
 CREATE TABLE ORDERS(
     order_number varchar(100) not null primary key,

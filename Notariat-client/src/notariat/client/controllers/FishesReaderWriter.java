@@ -131,7 +131,7 @@ public class FishesReaderWriter {
                     String[] strSplit=str.split(";");
                     // пробуем создать объект товар и добавить его в коллекцию
                     StringBuilder stringBuilder = new StringBuilder();
-                    File fileFish = new File("I:\\Notariat\\two\\NFISHNEW\\" + strSplit[3] + ".fis");
+                    File fileFish = new File("D:\\Java\\NK2FISH\\" + strSplit[3].replaceAll(" ","") + ".fis");
                     if(!fileFish.exists()){
                         stringBuilder.append("Шаблон пуст");
                         //break;
@@ -152,7 +152,7 @@ public class FishesReaderWriter {
                         
                     }
                     Fish fish = new Fish(strSplit[2], stringBuilder.toString());
-                    if (strSplit[0].replaceAll(" ", "").equals("1,1"))
+                    if (strSplit[0].replaceAll(" ", "").equals("13,3"))
                         fishes.add(fish);
             }
             return fishes;
