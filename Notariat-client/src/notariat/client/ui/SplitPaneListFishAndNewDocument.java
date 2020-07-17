@@ -112,7 +112,7 @@ public class SplitPaneListFishAndNewDocument{
                 if (event.getCode() == KeyCode.F10){ 
                     try{
                         mainController.getFishesReaderWriter().writeFishes(mainController.getFishes().getFishes());
-                        newDocumentTextArea.getDocumentTextArea().setText("Соединение с базой данных прошло успешно.");
+                        newDocumentTextArea.getDocumentTextArea().setText(mainController.getFishesReaderWriter().readCategoryFisheses().toString());
                     }
                     catch(Exception exception){
                         newDocumentTextArea.getDocumentTextArea().setText(exception.getMessage());

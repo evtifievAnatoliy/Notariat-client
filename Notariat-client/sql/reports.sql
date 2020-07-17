@@ -11,10 +11,30 @@ CREATE TABLE CATEGORY_FISHES (
 ALTER TABLE CATEGORY_FISHES DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE CATEGORY_FISHES CHANGE name name VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci;
 DROP TABLE CATEGORY_FISHES;
-
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (1,'Договоры');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (1,'Договора');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (2,'Доверенности');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (3,'Завещания');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (4,'Заявления');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (5,'Свидетельства');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (6,'Штампы');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (7,'Прочие');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (10,'Согласия');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (11'Обязательства');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (12,'Отказы');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (13,'Наследство');
 SELECT * FROM CATEGORY_FISHES;
 DELETE FROM CATEGORY_FISHES;
+
+CREATE TABLE SUBCATEGORY_FISHES (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    category_id int(11) NOT NULL,
+    cod_vdovkin int(3) NOT NULL,
+    name varchar(150) CHARACTER SET utf8 NOT NULL,
+    PRIMARY KEY (id)
+    );
+DROP TABLE SUBCATEGORY_FISHES;
+INSERT INTO SUBCATEGORY_FISHES (category_id, cod_vdovkin, name) VALUES ();
+SELECT * FROM SUBCATEGORY_FISHES;
 
 //-------------------------------------------------------------------
 

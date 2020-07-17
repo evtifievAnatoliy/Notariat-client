@@ -7,6 +7,11 @@ package notariat.client.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
+import notariat.client.models.CategoryFishes;
 
 /**
  *
@@ -35,6 +41,7 @@ public class MainForm {
     private double mainWindowWidth;
     
     private Stage primaryStage;
+    private Menu menuNewDocument;
     private Label labelNewDocument;
     private Label labelBaseWorkDay;
     private Menu  menuSettings;
@@ -61,9 +68,10 @@ public class MainForm {
         
         // отрисовываем меню
         MenuBar leftMenuBar = new MenuBar();
-        Menu menuNewDocument = new Menu();
+        menuNewDocument = new Menu();
         labelNewDocument = new Label("Новый документ (F3)");
         menuNewDocument.setGraphic(labelNewDocument);
+        setMenuNewDocument(mainController.getFishesReaderWriter().readCategoryFisheses());
         labelBaseWorkDay = new Label("База рабочего дня (Alt-F9)");
         Menu menuBaseWorkDay = new Menu();
         menuBaseWorkDay.setGraphic(labelBaseWorkDay);
@@ -122,6 +130,14 @@ public class MainForm {
     public DocumentTextArea getDocumentFromBaseTextArea() {
         return documentFromBaseTextArea;
     }
+
+    public void setMenuNewDocument(ArrayList<CategoryFishes> categoriesFisheses) {
+        for (CategoryFishes categoryFishes : categoriesFisheses){
+            MenuItem menuItem = new MenuItem(categoryFishes.toString());
+            this.menuNewDocument.getItems().add(menuItem);
+        }
+    
+    }
     
     
     
@@ -153,17 +169,35 @@ public class MainForm {
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                menuNewDocument.show();
             }
         });
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.F3 && event.getSource() == primaryStage){
-                    setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                    menuNewDocument.show();
                 }
             }
         });
+        for(MenuItem menuItem : menuNewDocument.getItems()){
+            menuItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText(menuItem.getText());
+                    alert.showAndWait();
+                    try {
+                        mainController.getFishesReaderWriter().readSubCategoryFishesAndWriteToMySQL(mainController.getCategoriesFishes().findCategoryFishes(menuItem.getText()).getId());
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                }
+            });
+        }
         //----------------------------------------------------------------
         
         // события при нажатии меню "База рабочего дня"

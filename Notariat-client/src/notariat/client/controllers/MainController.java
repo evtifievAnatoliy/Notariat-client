@@ -17,6 +17,7 @@ public class MainController {
     private static MainController instance;
     private Documents documents;
     private Fishes fishes;
+    private CategoriesFishes categoriesFishes;
     
     private FishesReaderWriter fishesReaderWriter;
     
@@ -24,10 +25,12 @@ public class MainController {
         
         documents = new Documents();
         
+        
         try
         {
             fishesReaderWriter = new FishesReaderWriter();
             fishes = new Fishes(fishesReaderWriter.readFishes());
+            categoriesFishes = new CategoriesFishes(fishesReaderWriter.readCategoryFisheses());
         }
         catch (Exception ex){
             throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
@@ -53,6 +56,10 @@ public class MainController {
         return fishes;
     }
 
+    public CategoriesFishes getCategoriesFishes() {
+        return categoriesFishes;
+    }
+    
     public FishesReaderWriter getFishesReaderWriter() {
         return fishesReaderWriter;
     }
