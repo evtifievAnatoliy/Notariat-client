@@ -11,18 +11,24 @@ package notariat.client.models;
  */
 public class SubCategoryFishes {
     private int id;
+    private int categoryId;
     private int codVdovkin;
     private String name;
 
-    public SubCategoryFishes(int id, int codVdovkin, String name) {
+    public SubCategoryFishes(int id, int categoryId, int codVdovkin, String name) {
     
         this.id = id;
         this.codVdovkin = codVdovkin;
         this.name = name;
+        this.categoryId = categoryId;
     }
 
     public int getId() {
         return id;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
     }
 
     public int getCodVdovkin() {

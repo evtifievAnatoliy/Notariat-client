@@ -8,6 +8,7 @@ package notariat.client.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SplitPane;
@@ -15,8 +16,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import notariat.client.controllers.MainController;
+import notariat.client.models.CategoryFishes;
 import notariat.client.models.Fish;
+import notariat.client.models.SubCategoryFishes;
 
 /**
  *
@@ -28,9 +32,11 @@ public class SplitPaneListFishAndNewDocument{
     private MainController mainController;
     
     private SplitPane splitPaneListFishesAndNewDocument;
+    private ListView<SubCategoryFishes> subCatalogOfFishListView;
     private ListView<Fish> fishListView;
     private MainForm mainForm;
     
+    private StackPane listStackPane;
     private DocumentTextArea newDocumentTextArea;
     
     public SplitPaneListFishAndNewDocument(MainForm mainForm, double wight) {
@@ -39,9 +45,17 @@ public class SplitPaneListFishAndNewDocument{
         
         mainController = MainController.getInstance();
     
-        ObservableList<Fish> fishesArray = FXCollections.observableArrayList(mainController.getFishes().getFishes());
+        // отрисовываем слой  "список Подкаталогов шаблонов"
+        ObservableList<SubCategoryFishes> subCatalogOfFishesArray = FXCollections.observableArrayList();
+        subCatalogOfFishListView = new ListView<SubCategoryFishes>();
+        subCatalogOfFishListView.setItems(subCatalogOfFishesArray);
+        // ------------------------------------
+        
+        // отрисовываем слой  "список шаблонов"
+        ObservableList<Fish> fishesArray = FXCollections.observableArrayList();
         fishListView = new ListView<Fish>();
         fishListView.setItems(fishesArray);
+        // ------------------------------------
         newDocumentTextArea = new DocumentTextArea(mainWindowWidth) {
             @Override
             public void keyEventEscape() {
@@ -56,23 +70,42 @@ public class SplitPaneListFishAndNewDocument{
             }
             
         };
-        
         splitPaneListFishesAndNewDocument = new SplitPane();
-        splitPaneListFishesAndNewDocument.getItems().addAll(fishListView, new BorderPane(newDocumentTextArea.getDocumentTextArea()));
+        listStackPane = new StackPane();
+        splitPaneListFishesAndNewDocument.getItems().addAll(listStackPane, new BorderPane(newDocumentTextArea.getDocumentTextArea()));
         
+        setStackPane(subCatalogOfFishListView);
         setSizeOfComponents(mainWindowWidth);
         initializationOfAllActionListeners();
     }
+
+    public ListView<SubCategoryFishes> getSubCatalogOfFishListView() {
+        return subCatalogOfFishListView;
+    }
+    
 
     public SplitPane getSplitPaneListFishesAndNewDocument() {
         return splitPaneListFishesAndNewDocument;
     }
     
+    public void setStackPane(Node node) {
+            if (listStackPane.getChildren() != null)
+                listStackPane.getChildren().clear();
+            listStackPane.getChildren().add(node);
+    }
+    
+    public void removeLastStackPane() {
+            if (listStackPane.getChildren().size() > 0)
+                listStackPane.getChildren().remove(listStackPane.getChildren().size()-1);
+            
+    }
     
     public void setSizeOfComponents(double windowWight){
         
         // устанавливаем размеры компонентов слоя Новый документ
         double fishListViewWight = windowWight/5;
+        listStackPane.setMinWidth(fishListViewWight);
+        listStackPane.setMaxWidth(fishListViewWight);
         fishListView.setMinWidth(fishListViewWight);
         fishListView.setMaxWidth(fishListViewWight);
         double textAreaWight = fishListViewWight/2*7;
@@ -83,13 +116,50 @@ public class SplitPaneListFishAndNewDocument{
     }
     
      private void initializationOfAllActionListeners(){
+        
+        // событие при выборе элемента в subCatalogOfFishListView
+        MultipleSelectionModel<SubCategoryFishes> subCatalogOfFishListViewSelectionModel = subCatalogOfFishListView.getSelectionModel();
+        subCatalogOfFishListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
+                    
+                    fishListView.getItems().addAll(mainController.getFishes(subCatalogOfFishListViewSelectionModel.getSelectedItem()).getFishes());
+                            
+                    
+                    
+                    listStackPane.getChildren().add(fishListView);
+                    fishListView.requestFocus();
+                }
+            }
+        });
+        subCatalogOfFishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER){ 
+                    fishListView.getItems().addAll(mainController.getFishes(subCatalogOfFishListViewSelectionModel.getSelectedItem()).getFishes());
+                      
+                    listStackPane.getChildren().add(fishListView);
+                    fishListView.requestFocus();
+                }
+            }
+        });
+        subCatalogOfFishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE){ 
+                    mainForm.removeLastStackPane();
+                }
+            }
+        });
+        //-------------------------------------------------------- 
          
         // событие при выборе элемента в fishListView
         MultipleSelectionModel<Fish> fishListViewSelectionModel = fishListView.getSelectionModel();
         fishListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-                if (event.getClickCount() >0){ //>1 для двойного нажатия
+                if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
                     // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
                     newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
                     newDocumentTextArea.getDocumentTextArea().requestFocus();
@@ -109,22 +179,8 @@ public class SplitPaneListFishAndNewDocument{
         fishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.F10){ 
-                    try{
-                        mainController.getFishesReaderWriter().writeFishes(mainController.getFishes().getFishes());
-                        newDocumentTextArea.getDocumentTextArea().setText(mainController.getFishesReaderWriter().readCategoryFisheses().toString());
-                    }
-                    catch(Exception exception){
-                        newDocumentTextArea.getDocumentTextArea().setText(exception.getMessage());
-                    }
-                }
-            }
-        });
-        fishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
-            @Override
-            public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE){ 
-                    mainForm.removeLastStackPane();
+                    removeLastStackPane();
                 }
             }
         });

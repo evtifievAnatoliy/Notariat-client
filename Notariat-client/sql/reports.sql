@@ -2,10 +2,10 @@ SET NAMES 'UTF8';
 SHOW CREATE TABLE CATEGORY_FISHES;
 
 CREATE TABLE CATEGORY_FISHES (
-    id int(11) NOT NULL AUTO_INCREMENT,
+    category_id int(11) NOT NULL AUTO_INCREMENT,
     cod_vdovkin int(3) NOT NULL,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (category_id)
     );
 
 ALTER TABLE CATEGORY_FISHES DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -19,22 +19,40 @@ INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (5,'Свидетельст
 INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (6,'Штампы');
 INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (7,'Прочие');
 INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (10,'Согласия');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (11'Обязательства');
+INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (11,'Обязательства');
 INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (12,'Отказы');
 INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (13,'Наследство');
 SELECT * FROM CATEGORY_FISHES;
 DELETE FROM CATEGORY_FISHES;
 
-CREATE TABLE SUBCATEGORY_FISHES (
+CREATE TABLE SUBCATEGORY_OF_CATEGORY_FISHES (
     id int(11) NOT NULL AUTO_INCREMENT,
     category_id int(11) NOT NULL,
-    cod_vdovkin int(3) NOT NULL,
-    name varchar(150) CHARACTER SET utf8 NOT NULL,
+    subcategory_id int(11) NOT NULL,
     PRIMARY KEY (id)
     );
+DROP TABLE SUBCATEGORY_OF_CATEGORY_FISHES;
+SELECT * FROM SUBCATEGORY_OF_CATEGORY_FISHES;
+DELETE FROM SUBCATEGORY_OF_CATEGORY_FISHES;
+INSERT INTO SUBCATEGORY_OF_CATEGORY_FISHES (category_id, subcategory_id) VALUES ();
+
+CREATE TABLE SUBCATEGORY_FISHES (
+    subcategory_id int(11) NOT NULL AUTO_INCREMENT,
+    cod_vdovkin int(3) NOT NULL,
+    name varchar(150) CHARACTER SET utf8 NOT NULL,
+    PRIMARY KEY (subcategory_id)
+    );
 DROP TABLE SUBCATEGORY_FISHES;
-INSERT INTO SUBCATEGORY_FISHES (category_id, cod_vdovkin, name) VALUES ();
+INSERT INTO SUBCATEGORY_FISHES (cod_vdovkin, name) VALUES ();
 SELECT * FROM SUBCATEGORY_FISHES;
+SELECT MAX(subcategory_id) FROM SUBCATEGORY_FISHES;
+DELETE FROM SUBCATEGORY_FISHES;
+
+SELECT * FROM SUBCATEGORY_FISHES subCategory
+    inner join SUBCATEGORY_OF_CATEGORY_FISHES subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
+    inner join CATEGORY_FISHES category on category.category_id = subCategoryOfCategory.category_id
+    WHERE category.category_id = 1;
+
 
 //-------------------------------------------------------------------
 

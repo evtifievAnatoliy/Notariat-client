@@ -184,16 +184,19 @@ public class MainForm {
             menuItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText(menuItem.getText());
-                    alert.showAndWait();
-                    try {
-                        mainController.getFishesReaderWriter().readSubCategoryFishesAndWriteToMySQL(mainController.getCategoriesFishes().findCategoryFishes(menuItem.getText()).getId());
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ParseException ex) {
-                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+//                    // импорт Подкатегорий от Вдовкина
+//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                    alert.setContentText(menuItem.getText());
+//                    alert.showAndWait();
+//                    try {
+//                        mainController.getFishesReaderWriter().readSubCategoryFishesAndWriteToMySQL(mainController.getCategoriesFishes().findCategoryFishes(menuItem.getText()));
+//                    } catch (Exception ex) {
+//                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+//                    } 
+                    splitPaneListFishAndNewDocument.getSubCatalogOfFishListView().getItems().clear();
+                    splitPaneListFishAndNewDocument.getSubCatalogOfFishListView().getItems().addAll(
+                            mainController.getSubCategoriesFishes(
+                                    mainController.getCategoriesFishes().findCategoryFishes(menuItem.getText())).getSubCategoriesFisheses());
                     setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
                 }
             });

@@ -6,6 +6,8 @@
 package notariat.client.controllers;
 
 import java.io.IOException;
+import notariat.client.models.CategoryFishes;
+import notariat.client.models.SubCategoryFishes;
 
 /**
  *
@@ -18,7 +20,7 @@ public class MainController {
     private Documents documents;
     private Fishes fishes;
     private CategoriesFishes categoriesFishes;
-    
+    private SubCategoriesFishes subCategoriesFishes;
     private FishesReaderWriter fishesReaderWriter;
     
     public MainController() throws IOException {
@@ -29,7 +31,6 @@ public class MainController {
         try
         {
             fishesReaderWriter = new FishesReaderWriter();
-            fishes = new Fishes(fishesReaderWriter.readFishes());
             categoriesFishes = new CategoriesFishes(fishesReaderWriter.readCategoryFisheses());
         }
         catch (Exception ex){
@@ -47,13 +48,34 @@ public class MainController {
         }
         return instance;
     }
-
+    
+    
+    public SubCategoriesFishes getSubCategoriesFishes(CategoryFishes categoryFishes) {
+        try
+        {
+            subCategoriesFishes = new SubCategoriesFishes(fishesReaderWriter.readSubCategoryFisheses(categoryFishes));
+            return subCategoriesFishes;
+        }
+        catch (Exception ex){
+            throw new IllegalArgumentException("Error. Ошибка чтения Подкаталогов рыб из базы!!!\n" + ex.getMessage());
+        }
+        
+    }
+    
     public Documents getDocuments() {
         return documents;
     }
 
-    public Fishes getFishes() {
-        return fishes;
+    public Fishes getFishes(SubCategoryFishes subCategoryFishes) {
+        try
+        {
+            fishes = new Fishes(fishesReaderWriter.readFishes(subCategoryFishes));
+            return fishes;
+        }
+        catch (Exception ex){
+            throw new IllegalArgumentException("Error. Ошибка чтения рыбы базы!!!\n" + ex.getMessage());
+        }
+        
     }
 
     public CategoriesFishes getCategoriesFishes() {
@@ -63,6 +85,7 @@ public class MainController {
     public FishesReaderWriter getFishesReaderWriter() {
         return fishesReaderWriter;
     }
+    
     
     
     
