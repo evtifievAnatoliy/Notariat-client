@@ -27,4 +27,11 @@ public class CategoriesFishes {
         }
         return null;
     }
+    public CategoryFishes findCategoryFishesById (int id){
+        for (CategoryFishes categoryFishes : categoriesFisheses){
+            if (categoryFishes.getId() == id)
+                return categoryFishes;
+        }
+        return null;
+    }
 }

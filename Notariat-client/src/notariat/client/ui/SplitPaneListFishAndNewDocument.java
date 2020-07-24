@@ -63,6 +63,7 @@ public class SplitPaneListFishAndNewDocument{
                 @Override
                     public void handle(KeyEvent event) {
                         if (event.getCode() == KeyCode.ESCAPE){ 
+                            getDocumentTextArea().clear();
                             fishListView.requestFocus();
                         }
                     }       
@@ -123,7 +124,7 @@ public class SplitPaneListFishAndNewDocument{
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
-                    
+                    fishListView.getItems().clear();
                     fishListView.getItems().addAll(mainController.getFishes(subCatalogOfFishListViewSelectionModel.getSelectedItem()).getFishes());
                             
                     
@@ -137,6 +138,7 @@ public class SplitPaneListFishAndNewDocument{
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER){ 
+                    fishListView.getItems().clear();
                     fishListView.getItems().addAll(mainController.getFishes(subCatalogOfFishListViewSelectionModel.getSelectedItem()).getFishes());
                       
                     listStackPane.getChildren().add(fishListView);

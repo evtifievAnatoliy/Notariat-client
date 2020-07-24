@@ -156,8 +156,8 @@ public class FishesReaderWriter {
     }
     
     
-    // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public ArrayList<Fish> readFishes(SubCategoryFishes subCategoryFishes) throws IOException, ParseException{
+    // метод чтения Шаблонов из файла . 
+    public ArrayList<Fish> readFishes(SubCategoryFishes subCategoryFishes, MainController mainController) throws IOException, ParseException{
         
         File file = new File(Configuration.getInstance().getProperty("fishesFromVdovkin.Path"));
         if(!file.exists()){
@@ -192,8 +192,9 @@ public class FishesReaderWriter {
                     catch(Exception e){
                         
                     }
-                    
-                    if (strSplit[0].replaceAll(" ", "").equals(subCategoryFishes.getCategoryId() + "," + subCategoryFishes.getId()/*"13,3"*/)){
+                    if (strSplit[0].replaceAll(" ", "").equals(
+                            mainController.getCategoriesFishes().findCategoryFishesById(subCategoryFishes.getCategoryId()).getCodVdovkin()
+                                    + "," + subCategoryFishes.getCodVdovkin()/*"13,3"*/)){
                         Fish fish = new Fish(strSplit[2], stringBuilder.toString());
                         fishes.add(fish);
                     }
