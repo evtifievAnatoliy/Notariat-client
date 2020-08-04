@@ -71,7 +71,12 @@ public class FishesReaderWriter {
                                             + "on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id " +
                                         "inner join FISH_CATEGORIES category "
                                             + "on category.category_id = subCategoryOfCategory.category_id " +
-                                        "WHERE category.category_id = " + fishCategory.getId();
+                                        "inner join DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES dfcs "
+                                            + "on dfcs.category_subcategories_id = subCategoryOfCategory.id " +
+                                        "inner join DEPARTMENTS department " 
+                                            + "on department.id = dfcs.department_id " +
+                                        "WHERE category.category_id = " + fishCategory.getId()
+                                            + " AND department.name = '" + Configuration.getInstance().getProperty("department") +"'";
                 try (ResultSet rs = st.executeQuery(report)){
                         // создаем коллекцию Сатегорий Шаблонов
                         ArrayList<FishSubCategory> fishSubCategories = new ArrayList<FishSubCategory>();
@@ -231,6 +236,20 @@ public class FishesReaderWriter {
                     if (Integer.parseInt(strSplitCategory[0]) == fishCategory.getCodVdovkin()){
                             if (lastIdSubCategoryFishes != Integer.parseInt(strSplitCategory[1]))
                             {
+                                
+                                // получаем Id подразделения
+                                int departmentId = 0;
+                                try(Statement st = connection.createStatement()){
+                                    final String findDepartmentId = "SELECT * FROM DEPARTMENTS dep WHERE dep.name = '" + 
+                                            Configuration.getInstance().getProperty("department") + "'";
+                                    try (ResultSet rs = st.executeQuery(findDepartmentId)){
+                                        while (rs.next()) {
+                                            departmentId = rs.getInt("id");
+                                        }
+                                    }
+                                }
+                                
+                                
                                 // вставляе запись в таблицу Подкатегорию Шаблонов
                                 String reportSubCategory = "INSERT INTO FISH_SUBCATEGORIES (cod_vdovkin, name) VALUES (?, ?)";
                                 try(PreparedStatement predStat = connection.prepareStatement(reportSubCategory)){
@@ -239,7 +258,6 @@ public class FishesReaderWriter {
                                     predStat.setObject(2, strSplit[1]);
                                     predStat.execute();
                                 }
-                                
                                 // получаем Id последней вставленной записи
                                 int lastSubcategoryId = 0;
                                 try(Statement st = connection.createStatement()){
@@ -250,12 +268,31 @@ public class FishesReaderWriter {
                                         }
                                     }
                                 }
+                                
                                 // устанавливаем связь между таблицей Категория и Подкатегория Шаблонов
                                 String reportSubCategoryOfCategory = "INSERT INTO FISH_CATEGORY_SUBCATEGORIES (category_id, subcategory_id) VALUES (?, ?)";
                                 try(PreparedStatement predStat = connection.prepareStatement(reportSubCategoryOfCategory)){
                                     //predStat.setObject(1, idCategoryFishes);
                                     predStat.setObject(1, fishCategory.getId());
                                     predStat.setObject(2, lastSubcategoryId);
+                                    predStat.execute();
+                                }
+                                // получаем Id последней вставленной записи
+                                int lastSubCategoryOfCategoriesId = 0;
+                                try(Statement st = connection.createStatement()){
+                                    final String findLastId = "SELECT MAX(id) FROM FISH_CATEGORY_SUBCATEGORIES";
+                                    try (ResultSet rs = st.executeQuery(findLastId)){
+                                        while (rs.next()) {
+                                            lastSubCategoryOfCategoriesId = rs.getInt("MAX(id)");
+                                        }
+                                    }
+                                }
+                                
+                                // устанавливаем связь между таблицей Подразделение и FISH_CATEGORY_SUBCATEGORIES
+                                String reportDepartmentSubCategoryOfCategory = "INSERT INTO DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES (category_subcategories_id, department_id) VALUES (?, ?)";
+                                try(PreparedStatement predStat = connection.prepareStatement(reportDepartmentSubCategoryOfCategory)){
+                                    predStat.setObject(1, lastSubCategoryOfCategoriesId);
+                                    predStat.setObject(2, departmentId);
                                     predStat.execute();
                                 }
                                 

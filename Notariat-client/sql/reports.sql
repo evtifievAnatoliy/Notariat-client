@@ -35,6 +35,7 @@ DROP TABLE FISH_CATEGORY_SUBCATEGORIES;
 SELECT * FROM FISH_CATEGORY_SUBCATEGORIES;
 DELETE FROM FISH_CATEGORY_SUBCATEGORIES;
 INSERT INTO FISH_CATEGORY_SUBCATEGORIES (category_id, subcategory_id) VALUES ();
+SELECT MAX(id) FROM FISH_CATEGORY_SUBCATEGORIES;
 
 CREATE TABLE FISH_SUBCATEGORIES (
     subcategory_id int(11) NOT NULL AUTO_INCREMENT,
@@ -47,12 +48,30 @@ INSERT INTO FISH_SUBCATEGORIES (cod_vdovkin, name) VALUES ();
 SELECT * FROM FISH_SUBCATEGORIES;
 SELECT MAX(subcategory_id) FROM FISH_SUBCATEGORIES;
 DELETE FROM FISH_SUBCATEGORIES;
-
 SELECT * FROM FISH_SUBCATEGORIES subCategory
     inner join FISH_CATEGORY_SUBCATEGORIES subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
     inner join FISH_CATEGORIES category on category.category_id = subCategoryOfCategory.category_id
-    WHERE category.category_id = 1;
+    inner join DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES dfcs on dfcs.category_subcategories_id = subCategoryOfCategory.id
+    inner join DEPARTMENTS department on department.id = dfcs.department_id
+    WHERE category.category_id = 1 AND department.name = 'НК2';
 
+CREATE TABLE DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    category_subcategories_id int(11) NOT NULL,
+    department_id int(11) NOT NULL,
+    PRIMARY KEY (id)
+    );
+INSERT INTO DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES (category_subcategories_id, department_id) VALUES (?, ?);
+SELECT * FROM DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES;
+DROP TABLE DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES;
+
+CREATE TABLE DEPARTMENTS(
+    id int(11) NOT NULL AUTO_INCREMENT,
+    name varchar(150) CHARACTER SET utf8 NOT NULL,
+    PRIMARY KEY (id)
+    );
+INSERT INTO DEPARTMENTS (name) VALUES ('НК2');
+SELECT * FROM DEPARTMENTS dep WHERE dep.name = 'НК2';
 
 //-------------------------------------------------------------------
 
