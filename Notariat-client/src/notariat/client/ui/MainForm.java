@@ -189,12 +189,12 @@ public class MainForm {
 //                    alert.setContentText(menuItem.getText());
 //                    alert.showAndWait();
 //                    try {
-//                        mainController.getFishesReaderWriter().readSubCategoryFishesAndWriteToMySQL(mainController.getCategoriesFishes().findCategoryFishes(menuItem.getText()));
+//                        mainController.getFishesReaderWriter().readFishSubCategoryAndWriteToMySQL(mainController.getFishCategories().findFishCategoryByName(menuItem.getText()));
 //                    } catch (Exception ex) {
 //                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
 //                    } 
-                    splitPaneListFishAndNewDocument.getSubCatalogOfFishListView().getItems().clear();
-                    splitPaneListFishAndNewDocument.getSubCatalogOfFishListView().getItems().addAll(
+                    splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().clear();
+                    splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().addAll(
                             mainController.getFishSubCategories(
                                     mainController.getFishCategories().findFishCategoryByName(menuItem.getText())).getFishSubCategories());
                     

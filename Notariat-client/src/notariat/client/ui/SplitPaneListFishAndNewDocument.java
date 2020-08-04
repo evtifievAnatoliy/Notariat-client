@@ -32,7 +32,7 @@ public class SplitPaneListFishAndNewDocument{
     private MainController mainController;
     
     private SplitPane splitPaneListFishesAndNewDocument;
-    private ListView<FishSubCategory> subCatalogOfFishListView;
+    private ListView<FishSubCategory> fishSubCategoriesListView;
     private ListView<Fish> fishListView;
     private MainForm mainForm;
     
@@ -46,9 +46,9 @@ public class SplitPaneListFishAndNewDocument{
         mainController = MainController.getInstance();
     
         // отрисовываем слой  "список Подкаталогов шаблонов"
-        ObservableList<FishSubCategory> subCatalogOfFishesArray = FXCollections.observableArrayList();
-        subCatalogOfFishListView = new ListView<FishSubCategory>();
-        subCatalogOfFishListView.setItems(subCatalogOfFishesArray);
+        ObservableList<FishSubCategory> fishSubCategoriesArray = FXCollections.observableArrayList();
+        fishSubCategoriesListView = new ListView<FishSubCategory>();
+        fishSubCategoriesListView.setItems(fishSubCategoriesArray);
         // ------------------------------------
         
         // отрисовываем слой  "список шаблонов"
@@ -75,13 +75,13 @@ public class SplitPaneListFishAndNewDocument{
         listStackPane = new StackPane();
         splitPaneListFishesAndNewDocument.getItems().addAll(listStackPane, new BorderPane(newDocumentTextArea.getDocumentTextArea()));
         
-        setStackPane(subCatalogOfFishListView);
+        setStackPane(fishSubCategoriesListView);
         setSizeOfComponents(mainWindowWidth);
         initializationOfAllActionListeners();
     }
 
-    public ListView<FishSubCategory> getSubCatalogOfFishListView() {
-        return subCatalogOfFishListView;
+    public ListView<FishSubCategory> getFishSubCategoriesListView() {
+        return fishSubCategoriesListView;
     }
     
 
@@ -118,14 +118,14 @@ public class SplitPaneListFishAndNewDocument{
     
      private void initializationOfAllActionListeners(){
         
-        // событие при выборе элемента в subCatalogOfFishListView
-        MultipleSelectionModel<FishSubCategory> subCatalogOfFishListViewSelectionModel = subCatalogOfFishListView.getSelectionModel();
-        subCatalogOfFishListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+        // событие при выборе элемента в fishSubCategoriesListView
+        MultipleSelectionModel<FishSubCategory> fishSubCategoriesListViewSelectionModel = fishSubCategoriesListView.getSelectionModel();
+        fishSubCategoriesListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
                     fishListView.getItems().clear();
-                    fishListView.getItems().addAll(mainController.getFishes(subCatalogOfFishListViewSelectionModel.getSelectedItem()).getFishes());
+                    fishListView.getItems().addAll(mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).getFishes());
                             
                     
                     
@@ -134,19 +134,19 @@ public class SplitPaneListFishAndNewDocument{
                 }
             }
         });
-        subCatalogOfFishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+        fishSubCategoriesListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER){ 
                     fishListView.getItems().clear();
-                    fishListView.getItems().addAll(mainController.getFishes(subCatalogOfFishListViewSelectionModel.getSelectedItem()).getFishes());
+                    fishListView.getItems().addAll(mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).getFishes());
                       
                     listStackPane.getChildren().add(fishListView);
                     fishListView.requestFocus();
                 }
             }
         });
-        subCatalogOfFishListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
+        fishSubCategoriesListView.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE){ 
