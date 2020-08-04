@@ -18,9 +18,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import notariat.client.controllers.MainController;
-import notariat.client.models.CategoryFishes;
+import notariat.client.models.FishCategory;
 import notariat.client.models.Fish;
-import notariat.client.models.SubCategoryFishes;
+import notariat.client.models.FishSubCategory;
 
 /**
  *
@@ -32,7 +32,7 @@ public class SplitPaneListFishAndNewDocument{
     private MainController mainController;
     
     private SplitPane splitPaneListFishesAndNewDocument;
-    private ListView<SubCategoryFishes> subCatalogOfFishListView;
+    private ListView<FishSubCategory> subCatalogOfFishListView;
     private ListView<Fish> fishListView;
     private MainForm mainForm;
     
@@ -46,8 +46,8 @@ public class SplitPaneListFishAndNewDocument{
         mainController = MainController.getInstance();
     
         // отрисовываем слой  "список Подкаталогов шаблонов"
-        ObservableList<SubCategoryFishes> subCatalogOfFishesArray = FXCollections.observableArrayList();
-        subCatalogOfFishListView = new ListView<SubCategoryFishes>();
+        ObservableList<FishSubCategory> subCatalogOfFishesArray = FXCollections.observableArrayList();
+        subCatalogOfFishListView = new ListView<FishSubCategory>();
         subCatalogOfFishListView.setItems(subCatalogOfFishesArray);
         // ------------------------------------
         
@@ -80,7 +80,7 @@ public class SplitPaneListFishAndNewDocument{
         initializationOfAllActionListeners();
     }
 
-    public ListView<SubCategoryFishes> getSubCatalogOfFishListView() {
+    public ListView<FishSubCategory> getSubCatalogOfFishListView() {
         return subCatalogOfFishListView;
     }
     
@@ -119,7 +119,7 @@ public class SplitPaneListFishAndNewDocument{
      private void initializationOfAllActionListeners(){
         
         // событие при выборе элемента в subCatalogOfFishListView
-        MultipleSelectionModel<SubCategoryFishes> subCatalogOfFishListViewSelectionModel = subCatalogOfFishListView.getSelectionModel();
+        MultipleSelectionModel<FishSubCategory> subCatalogOfFishListViewSelectionModel = subCatalogOfFishListView.getSelectionModel();
         subCatalogOfFishListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {

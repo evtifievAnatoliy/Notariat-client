@@ -6,8 +6,8 @@
 package notariat.client.controllers;
 
 import java.io.IOException;
-import notariat.client.models.CategoryFishes;
-import notariat.client.models.SubCategoryFishes;
+import notariat.client.models.FishCategory;
+import notariat.client.models.FishSubCategory;
 
 /**
  *
@@ -19,8 +19,8 @@ public class MainController {
     private static MainController instance;
     private Documents documents;
     private Fishes fishes;
-    private CategoriesFishes categoriesFishes;
-    private SubCategoriesFishes subCategoriesFishes;
+    private FishCategories fishCategories;
+    private FishSubCategories fishSubCategories;
     private FishesReaderWriter fishesReaderWriter;
     
     public MainController() throws IOException {
@@ -31,7 +31,7 @@ public class MainController {
         try
         {
             fishesReaderWriter = new FishesReaderWriter();
-            categoriesFishes = new CategoriesFishes(fishesReaderWriter.readCategoryFisheses());
+            fishCategories = new FishCategories(fishesReaderWriter.readFishCategories());
         }
         catch (Exception ex){
             throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
@@ -50,11 +50,11 @@ public class MainController {
     }
     
     
-    public SubCategoriesFishes getSubCategoriesFishes(CategoryFishes categoryFishes) {
+    public FishSubCategories getFishSubCategories(FishCategory fishCategory) {
         try
         {
-            subCategoriesFishes = new SubCategoriesFishes(fishesReaderWriter.readSubCategoryFisheses(categoryFishes));
-            return subCategoriesFishes;
+            fishSubCategories = new FishSubCategories(fishesReaderWriter.readFishSubCategories(fishCategory));
+            return fishSubCategories;
         }
         catch (Exception ex){
             throw new IllegalArgumentException("Error. Ошибка чтения Подкаталогов рыб из базы!!!\n" + ex.getMessage());
@@ -66,10 +66,10 @@ public class MainController {
         return documents;
     }
 
-    public Fishes getFishes(SubCategoryFishes subCategoryFishes) {
+    public Fishes getFishes(FishSubCategory fishSubCategory) {
         try
         {
-            fishes = new Fishes(fishesReaderWriter.readFishes(subCategoryFishes, this));
+            fishes = new Fishes(fishesReaderWriter.readFishes(fishSubCategory, this));
             return fishes;
         }
         catch (Exception ex){
@@ -78,8 +78,8 @@ public class MainController {
         
     }
 
-    public CategoriesFishes getCategoriesFishes() {
-        return categoriesFishes;
+    public FishCategories getFishCategories() {
+        return fishCategories;
     }
     
     public FishesReaderWriter getFishesReaderWriter() {

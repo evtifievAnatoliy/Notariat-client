@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.SortedMap;
 import notariat.client.configuration.Configuration;
-import notariat.client.models.CategoryFishes;
+import notariat.client.models.FishCategory;
 import notariat.client.models.Fish;
-import notariat.client.models.SubCategoryFishes;
+import notariat.client.models.FishSubCategory;
 
 /**
  *
@@ -37,7 +37,7 @@ import notariat.client.models.SubCategoryFishes;
 public class FishesReaderWriter {
     
     // метод получения Категорий Шаблонов(Рыб)
-    public ArrayList<CategoryFishes> readCategoryFisheses() throws IOException{
+    public ArrayList<FishCategory> readFishCategories() throws IOException{
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"), 
                     Configuration.getInstance().getProperty("password.Db"))){
@@ -45,13 +45,13 @@ public class FishesReaderWriter {
                 final String report = "SELECT * FROM CATEGORY_FISHES";
                 try (ResultSet rs = st.executeQuery(report)){
                         // создаем коллекцию Сатегорий Шаблонов
-                        ArrayList<CategoryFishes> categoriesFisheses = new ArrayList<CategoryFishes>();
+                        ArrayList<FishCategory> fishCategories = new ArrayList<FishCategory>();
                         while (rs.next()) {
                             // пробуем создать объект шаблон и добавить его в коллекцию
-                            CategoryFishes categoryFishes = new CategoryFishes(rs.getInt("category_id"), rs.getInt("cod_vdovkin"), rs.getString("name"));
-                            categoriesFisheses.add(categoryFishes);
+                            FishCategory fishCategory = new FishCategory(rs.getInt("category_id"), rs.getInt("cod_vdovkin"), rs.getString("name"));
+                            fishCategories.add(fishCategory);
                         }
-                        return categoriesFisheses;
+                        return fishCategories;
                     }
             }
             
@@ -61,7 +61,7 @@ public class FishesReaderWriter {
         }
     }
     // метод получения Подкатегорий Шаблонов(Рыб)
-    public ArrayList<SubCategoryFishes> readSubCategoryFisheses(CategoryFishes categoryFishes) throws IOException{
+    public ArrayList<FishSubCategory> readFishSubCategories(FishCategory fishCategory) throws IOException{
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"), 
                     Configuration.getInstance().getProperty("password.Db"))){
@@ -71,16 +71,16 @@ public class FishesReaderWriter {
                                             + "on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id " +
                                         "inner join CATEGORY_FISHES category "
                                             + "on category.category_id = subCategoryOfCategory.category_id " +
-                                        "WHERE category.category_id = " + categoryFishes.getId();
+                                        "WHERE category.category_id = " + fishCategory.getId();
                 try (ResultSet rs = st.executeQuery(report)){
                         // создаем коллекцию Сатегорий Шаблонов
-                        ArrayList<SubCategoryFishes> subCategoriesFisheses = new ArrayList<SubCategoryFishes>();
+                        ArrayList<FishSubCategory> fishSubCategories = new ArrayList<FishSubCategory>();
                         while (rs.next()) {
                             // пробуем создать объект шаблон и добавить его в коллекцию
-                            SubCategoryFishes subCategoryFishes = new SubCategoryFishes(rs.getInt("subcategory_id"), categoryFishes.getId(), rs.getInt("cod_vdovkin"), rs.getString("name"));
-                            subCategoriesFisheses.add(subCategoryFishes);
+                            FishSubCategory fishSubCategory = new FishSubCategory(rs.getInt("subcategory_id"), fishCategory.getId(), rs.getInt("cod_vdovkin"), rs.getString("name"));
+                            fishSubCategories.add(fishSubCategory);
                         }
-                        return subCategoriesFisheses;
+                        return fishSubCategories;
                     }
             }
             
@@ -157,7 +157,7 @@ public class FishesReaderWriter {
     
     
     // метод чтения Шаблонов из файла . 
-    public ArrayList<Fish> readFishes(SubCategoryFishes subCategoryFishes, MainController mainController) throws IOException, ParseException{
+    public ArrayList<Fish> readFishes(FishSubCategory subCategoryFishes, MainController mainController) throws IOException, ParseException{
         
         File file = new File(Configuration.getInstance().getProperty("fishesFromVdovkin.Path"));
         if(!file.exists()){
@@ -193,7 +193,7 @@ public class FishesReaderWriter {
                         
                     }
                     if (strSplit[0].replaceAll(" ", "").equals(
-                            mainController.getCategoriesFishes().findCategoryFishesById(subCategoryFishes.getCategoryId()).getCodVdovkin()
+                            mainController.getFishCategories().findFishCategoryById(subCategoryFishes.getCategoryId()).getCodVdovkin()
                                     + "," + subCategoryFishes.getCodVdovkin()/*"13,3"*/)){
                         Fish fish = new Fish(strSplit[2], stringBuilder.toString());
                         fishes.add(fish);
@@ -205,15 +205,15 @@ public class FishesReaderWriter {
     }
     
     // метод чтения из файла Подкатегорий и запись их в базу данных MySQL
-    public void readSubCategoryFishesAndWriteToMySQL(CategoryFishes categoryFishes) throws IOException, ParseException, SQLException{
+    public void readFishSubCategoryAndWriteToMySQL(FishCategory fishCategory) throws IOException, ParseException, SQLException{
     
         File file = new File(Configuration.getInstance().getProperty("fishesFromVdovkin.Path"));
         if(!file.exists()){
-            ArrayList<SubCategoryFishes> subCategoriesFishes = new ArrayList<SubCategoryFishes>();
+            ArrayList<FishSubCategory> subCategoriesFishes = new ArrayList<FishSubCategory>();
             
         }
         // создаем коллекцию шаблонов
-        ArrayList<SubCategoryFishes> subCategoriesFishes = new ArrayList<SubCategoryFishes>();
+        ArrayList<FishSubCategory> subCategoriesFishes = new ArrayList<FishSubCategory>();
             try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")); 
                     Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                             Configuration.getInstance().getProperty("user.Db"),
@@ -228,7 +228,7 @@ public class FishesReaderWriter {
                     String[] strSplit=strToUtf8.split(";");
                     strSplit[0] = strSplit[0].replaceAll(" ","");
                     String[] strSplitCategory = strSplit[0].split(",");
-                    if (Integer.parseInt(strSplitCategory[0]) == categoryFishes.getCodVdovkin()){
+                    if (Integer.parseInt(strSplitCategory[0]) == fishCategory.getCodVdovkin()){
                             if (lastIdSubCategoryFishes != Integer.parseInt(strSplitCategory[1]))
                             {
                                 // вставляе запись в таблицу Подкатегорию Шаблонов
@@ -254,7 +254,7 @@ public class FishesReaderWriter {
                                 String reportSubCategoryOfCategory = "INSERT INTO SUBCATEGORY_OF_CATEGORY_FISHES (category_id, subcategory_id) VALUES (?, ?)";
                                 try(PreparedStatement predStat = connection.prepareStatement(reportSubCategoryOfCategory)){
                                     //predStat.setObject(1, idCategoryFishes);
-                                    predStat.setObject(1, categoryFishes.getId());
+                                    predStat.setObject(1, fishCategory.getId());
                                     predStat.setObject(2, lastSubcategoryId);
                                     predStat.execute();
                                 }

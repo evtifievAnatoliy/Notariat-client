@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
-import notariat.client.models.CategoryFishes;
+import notariat.client.models.FishCategory;
 
 /**
  *
@@ -71,7 +71,7 @@ public class MainForm {
         menuNewDocument = new Menu();
         labelNewDocument = new Label("Новый документ (F3)");
         menuNewDocument.setGraphic(labelNewDocument);
-        setMenuNewDocument(mainController.getFishesReaderWriter().readCategoryFisheses());
+        setMenuNewDocument(mainController.getFishesReaderWriter().readFishCategories());
         labelBaseWorkDay = new Label("База рабочего дня (Alt-F9)");
         Menu menuBaseWorkDay = new Menu();
         menuBaseWorkDay.setGraphic(labelBaseWorkDay);
@@ -131,8 +131,8 @@ public class MainForm {
         return documentFromBaseTextArea;
     }
 
-    public void setMenuNewDocument(ArrayList<CategoryFishes> categoriesFisheses) {
-        for (CategoryFishes categoryFishes : categoriesFisheses){
+    public void setMenuNewDocument(ArrayList<FishCategory> categoriesFisheses) {
+        for (FishCategory categoryFishes : categoriesFisheses){
             MenuItem menuItem = new MenuItem(categoryFishes.toString());
             this.menuNewDocument.getItems().add(menuItem);
         }
@@ -195,8 +195,9 @@ public class MainForm {
 //                    } 
                     splitPaneListFishAndNewDocument.getSubCatalogOfFishListView().getItems().clear();
                     splitPaneListFishAndNewDocument.getSubCatalogOfFishListView().getItems().addAll(
-                            mainController.getSubCategoriesFishes(
-                                    mainController.getCategoriesFishes().findCategoryFishes(menuItem.getText())).getSubCategoriesFisheses());
+                            mainController.getFishSubCategories(
+                                    mainController.getFishCategories().findFishCategoryByName(menuItem.getText())).getFishSubCategories());
+                    
                     setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
                 }
             });
