@@ -1,56 +1,56 @@
 SET NAMES 'UTF8';
 SHOW CREATE TABLE CATEGORY_FISHES;
 
-CREATE TABLE CATEGORY_FISHES (
+CREATE TABLE FISH_CATEGORIES (
     category_id int(11) NOT NULL AUTO_INCREMENT,
     cod_vdovkin int(3) NOT NULL,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
     PRIMARY KEY (category_id)
     );
 
-ALTER TABLE CATEGORY_FISHES DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-ALTER TABLE CATEGORY_FISHES CHANGE name name VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci;
-DROP TABLE CATEGORY_FISHES;
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (1,'Договора');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (2,'Доверенности');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (3,'Завещания');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (4,'Заявления');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (5,'Свидетельства');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (6,'Штампы');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (7,'Прочие');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (10,'Согласия');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (11,'Обязательства');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (12,'Отказы');
-INSERT INTO CATEGORY_FISHES (cod_vdovkin,name) VALUES (13,'Наследство');
-SELECT * FROM CATEGORY_FISHES;
-DELETE FROM CATEGORY_FISHES;
+ALTER TABLE FISH_CATEGORIES DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE FISH_CATEGORIES CHANGE name name VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci;
+DROP TABLE FISH_CATEGORIES;
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (1,'Договора');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (2,'Доверенности');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (3,'Завещания');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (4,'Заявления');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (5,'Свидетельства');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (6,'Штампы');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (7,'Прочие');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (10,'Согласия');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (11,'Обязательства');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (12,'Отказы');
+INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (13,'Наследство');
+SELECT * FROM FISH_CATEGORIES;
+DELETE FROM FISH_CATEGORIES;
 
-CREATE TABLE SUBCATEGORY_OF_CATEGORY_FISHES (
+CREATE TABLE FISH_CATEGORY_SUBCATEGORIES (
     id int(11) NOT NULL AUTO_INCREMENT,
     category_id int(11) NOT NULL,
     subcategory_id int(11) NOT NULL,
     PRIMARY KEY (id)
     );
-DROP TABLE SUBCATEGORY_OF_CATEGORY_FISHES;
-SELECT * FROM SUBCATEGORY_OF_CATEGORY_FISHES;
-DELETE FROM SUBCATEGORY_OF_CATEGORY_FISHES;
-INSERT INTO SUBCATEGORY_OF_CATEGORY_FISHES (category_id, subcategory_id) VALUES ();
+DROP TABLE FISH_CATEGORY_SUBCATEGORIES;
+SELECT * FROM FISH_CATEGORY_SUBCATEGORIES;
+DELETE FROM FISH_CATEGORY_SUBCATEGORIES;
+INSERT INTO FISH_CATEGORY_SUBCATEGORIES (category_id, subcategory_id) VALUES ();
 
-CREATE TABLE SUBCATEGORY_FISHES (
+CREATE TABLE FISH_SUBCATEGORIES (
     subcategory_id int(11) NOT NULL AUTO_INCREMENT,
     cod_vdovkin int(3) NOT NULL,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
     PRIMARY KEY (subcategory_id)
     );
-DROP TABLE SUBCATEGORY_FISHES;
-INSERT INTO SUBCATEGORY_FISHES (cod_vdovkin, name) VALUES ();
-SELECT * FROM SUBCATEGORY_FISHES;
-SELECT MAX(subcategory_id) FROM SUBCATEGORY_FISHES;
-DELETE FROM SUBCATEGORY_FISHES;
+DROP TABLE FISH_SUBCATEGORIES;
+INSERT INTO FISH_SUBCATEGORIES (cod_vdovkin, name) VALUES ();
+SELECT * FROM FISH_SUBCATEGORIES;
+SELECT MAX(subcategory_id) FROM FISH_SUBCATEGORIES;
+DELETE FROM FISH_SUBCATEGORIES;
 
-SELECT * FROM SUBCATEGORY_FISHES subCategory
-    inner join SUBCATEGORY_OF_CATEGORY_FISHES subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
-    inner join CATEGORY_FISHES category on category.category_id = subCategoryOfCategory.category_id
+SELECT * FROM FISH_SUBCATEGORIES subCategory
+    inner join FISH_CATEGORY_SUBCATEGORIES subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
+    inner join FISH_CATEGORIES category on category.category_id = subCategoryOfCategory.category_id
     WHERE category.category_id = 1;
 
 
