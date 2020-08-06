@@ -30,6 +30,7 @@ import javafx.stage.StageStyle;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
 import notariat.client.models.FishCategory;
+import notariat.client.models.FishSubCategory;
 
 /**
  *
@@ -45,12 +46,14 @@ public class MainForm {
     private Label labelNewDocument;
     private Label labelBaseWorkDay;
     private Menu  menuSettings;
+    private MenuItem menuItemSettingsFishes;
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
     
     private SplitPaneListFishAndNewDocument splitPaneListFishAndNewDocument;
     private WorkDayTableView workDayTableView;
     private DocumentTextArea documentFromBaseTextArea;
+    private TextArea informationTextArea = new TextArea();
     
     public MainForm(Stage primaryStage)throws Exception {
     
@@ -80,6 +83,8 @@ public class MainForm {
         
         MenuBar rightMenuBar = new MenuBar();
         menuSettings = new Menu("Настройки");
+        menuItemSettingsFishes = new MenuItem("Шаблоны");
+        menuSettings.getItems().add(menuItemSettingsFishes);
         Menu menuExit = new Menu("Выход");
         menuItemExit = new MenuItem("Выход");
         menuExit.getItems().add(menuItemExit);
@@ -165,6 +170,31 @@ public class MainForm {
             }
         });
         
+        // событие по нажатию пункта меню "Шаблоны в настройках" 
+        menuItemSettingsFishes.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+            public void handle(ActionEvent event) {
+                informationTextArea.clear();
+                informationTextArea.setText("Загрузка началась: \n");
+                setStackPane(informationTextArea);
+                loadFishSubCategoriesFromVdovkinToMySql(mainController.getFishCategories().getFishCategories());
+                Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка шаблонов закончена.", ButtonType.OK);
+                alert.showAndWait();
+                
+            }
+        });
+        // событие по нажатию Esc "Информационного текстового поля" 
+        informationTextArea.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE){
+                    removeLastStackPane();
+                }
+            }
+        });
+        
+        
+        
         // события при нажатии меню "Новый документ"
         labelNewDocument.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -184,15 +214,6 @@ public class MainForm {
             menuItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-//                    // импорт Подкатегорий от Вдовкина
-//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//                    alert.setContentText(menuItem.getText());
-//                    alert.showAndWait();
-//                    try {
-//                        mainController.getFishesReaderWriter().readFishSubCategoryAndWriteToMySQL(mainController.getFishCategories().findFishCategoryByName(menuItem.getText()));
-//                    } catch (Exception ex) {
-//                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-//                    } 
                     splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().clear();
                     splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().addAll(
                             mainController.getFishSubCategories(
@@ -244,5 +265,23 @@ public class MainForm {
                 mainStackPane.getChildren().remove(mainStackPane.getChildren().size()-1);
             
     }
-
+    
+    //метод загрузки шадлонов и рыб от Вдовкина в MySql
+    private void loadFishSubCategoriesFromVdovkinToMySql(ArrayList<FishCategory> fishCategories) {
+        for (FishCategory fishCategory : fishCategories){
+            try {
+                mainController.getFishesReaderWriter().readFishSubCategoryAndWriteToMySQL(fishCategory);
+                informationTextArea.appendText(fishCategory.getName() + "-OK \n");
+                for(FishSubCategory fishSubCategory: mainController.getFishSubCategories(fishCategory).getFishSubCategories()){
+                    mainController.getFishesReaderWriter().writeFishesToMySQL(
+                                mainController.getFishesReaderWriter().readFishesFromFile(fishSubCategory, mainController),
+                            fishSubCategory.getId());
+                informationTextArea.appendText(fishSubCategory.getName() + "-OK \n");
+                }
+            } catch (Exception ex) {
+                informationTextArea.appendText(fishCategory.getName() + "-Error!!! \n" + ex.getMessage() + "\n");
+            } 
+        }
+    
+    }
 }

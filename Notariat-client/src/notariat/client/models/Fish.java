@@ -11,11 +11,10 @@ package notariat.client.models;
  */
 public class Fish {
     private int key;
-    private String catalog_name;
     private String fish_name;
     private String fish_body;
-    private String act_code;
-    private String atribute;
+    private int act_code;
+    private int atribute;
 
     public Fish(String fish_name, String fish_body) {
         this.fish_name = fish_name;

@@ -94,48 +94,41 @@ public class FishesReaderWriter {
             throw new IllegalArgumentException("Error. Ошибка чтения Категории Шаблонов из базы данных.!!!\n" + ex.getMessage());
         }
     }
-    //-------------------------------------------
     
-    
-    
-    // метод записи в MYSQL. 
-    public void writeFishes(ArrayList<Fish> fishes) throws IOException{
-//      Connection conn = getConnection();
+    // метод чтения Шаблонов. 
+    public ArrayList<Fish> readFishes(FishSubCategory fishSubCategory) throws IOException, ParseException{
         
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"), 
                     Configuration.getInstance().getProperty("password.Db"))){
-                /*
-                if (newItem != null){
-                    String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
-                    try(PreparedStatement predStat = connection.prepareStatement(report)){
-                        predStat.setObject(1, newItem.getArticle());
-                        predStat.setObject(2, newItem.getName());
-                        predStat.setObject(3, newItem.getColor());
-                        predStat.setObject(4, newItem.getPrice());
-                        predStat.setObject(5, newItem.getStockBalance());
-                        predStat.execute();
-                    }
-                }
-                if (updateItems != null){
-                    for(Item i : updateItems){
-                        String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
-                        try(PreparedStatement predStat = connection.prepareStatement(report)){
-                            predStat.setObject(1, i.getName());
-                            predStat.setObject(2, i.getColor());
-                            predStat.setObject(3, i.getPrice());
-                            predStat.setObject(4, i.getStockBalance());
-                            predStat.setObject(5, i.getArticle());
-                            predStat.execute();
+            try(Statement st = connection.createStatement()){
+                final String report = "SELECT * FROM FISHES fishes " +
+                                        "inner join FISH_SUBCATEGORIES_FISHES fsf  "
+                                            + "on fishes.fish_id = fsf.fish_id " +
+                                        "inner join FISH_SUBCATEGORIES fs "
+                                            + "on fs.subcategory_id = fsf.subcategory_id " +
+                                        "WHERE fs.subcategory_id = " + fishSubCategory.getId();
+                try (ResultSet rs = st.executeQuery(report)){
+                        // создаем коллекцию Сатегорий Шаблонов
+                        ArrayList<Fish> fishes = new ArrayList<Fish>();
+                        while (rs.next()) {
+                            // пробуем создать объект шаблон и добавить его в коллекцию
+                            Fish fish = new Fish(rs.getString("name"), rs.getString("body"));
+                            fishes.add(fish);
                         }
+                        return fishes;
                     }
-                }*/
-           }
-        
-            catch(SQLException ex){
-                throw new IllegalArgumentException("Error. Ошибка соединения с базой данных.!!!\n" + ex.getMessage());
             }
+            
+        }
+        catch(SQLException ex){
+            throw new IllegalArgumentException("Error. Ошибка чтения  Шаблонов из базы данных.!!!\n" + ex.getMessage());
+        }
     }
+
+    //-------------------------------------------
+    
+    
     
     public Connection getConnection() {
         String driver = "org.gjt.mm.mysql.Driver";
@@ -161,8 +154,11 @@ public class FishesReaderWriter {
     }
     
     
+    
+    
+    // методы подключаемые для переноса данных из старой программы 
     // метод чтения Шаблонов из файла . 
-    public ArrayList<Fish> readFishes(FishSubCategory subCategoryFishes, MainController mainController) throws IOException, ParseException{
+    public ArrayList<Fish> readFishesFromFile(FishSubCategory subCategoryFishes, MainController mainController) throws IOException, ParseException{
         
         File file = new File(Configuration.getInstance().getProperty("fishesFromVdovkin.Path"));
         if(!file.exists()){
@@ -182,20 +178,22 @@ public class FishesReaderWriter {
                         stringBuilder.append("Шаблон пуст");
                         //break;
                     }
-                    //try(BufferedReader brFish = new BufferedReader(new FileReader(fileFish))){
-                    try(BufferedReader brFish = new BufferedReader(new InputStreamReader(new FileInputStream(fileFish), "CP866"))){
-                        String strFish;
-                        while((strFish = brFish.readLine()) != null){
+                    else{
+                        //try(BufferedReader brFish = new BufferedReader(new FileReader(fileFish))){
+                        try(BufferedReader brFish = new BufferedReader(new InputStreamReader(new FileInputStream(fileFish), "CP866"))){
+                            String strFish;
+                            while((strFish = brFish.readLine()) != null){
                             
-                            byte[] bytes = strFish.getBytes();
-                            String strFishIncoding = new String(bytes, "UTF-8");
-                            stringBuilder.append(strFishIncoding);
-                            stringBuilder.append("\n");
+                                byte[] bytes = strFish.getBytes();
+                                String strFishIncoding = new String(bytes, "UTF-8");
+                                stringBuilder.append(strFishIncoding);
+                                stringBuilder.append("\n");
                             
+                            }
                         }
-                    }
-                    catch(Exception e){
-                        
+                        catch(Exception e){
+                        throw new IllegalArgumentException("Error. Ошибка построения шаблона.!!!\n" + e.getMessage());
+                        }
                     }
                     if (strSplit[0].replaceAll(" ", "").equals(
                             mainController.getFishCategories().findFishCategoryById(subCategoryFishes.getCategoryId()).getCodVdovkin()
@@ -301,6 +299,46 @@ public class FishesReaderWriter {
                     }
                 }
             
+            }
+    }
+    
+    // метод записи Шаблоновв базу данных MySQL
+    public void writeFishesToMySQL(ArrayList<Fish> fishes, int subCategoryId){
+            
+            String currentFish = "";
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                            Configuration.getInstance().getProperty("user.Db"),
+                            Configuration.getInstance().getProperty("password.Db"))){
+                
+                for (Fish fish: fishes){
+                    currentFish = fish.getFish_name();
+                    // вставляе запись в таблицу Шаблоны
+                    String reportFish = "INSERT INTO FISHES (name, body) VALUES (?, ?)";
+                    try(PreparedStatement predStat = connection.prepareStatement(reportFish)){
+                        predStat.setObject(1, fish.getFish_name());
+                        predStat.setObject(2, fish.getFish_body());
+                        predStat.execute();
+                    }
+                    // получаем Id последней вставленной записи
+                    int lastFishId = 0;
+                    try(Statement st = connection.createStatement()){
+                        final String findLastId = "SELECT MAX(fish_id) FROM FISHES";
+                        try (ResultSet rs = st.executeQuery(findLastId)){
+                            while (rs.next()) {
+                                lastFishId = rs.getInt("MAX(fish_id)");
+                            }
+                        }
+                    }
+                    // устанавливаем связь между таблицей Шаблонов и Подкатегория Шаблонов
+                    String reportSubCategoryOfCategory = "INSERT INTO FISH_SUBCATEGORIES_FISHES (subcategory_id, fish_id) VALUES (?, ?)";
+                    try(PreparedStatement predStat = connection.prepareStatement(reportSubCategoryOfCategory)){
+                        predStat.setObject(1, subCategoryId);
+                        predStat.setObject(2, lastFishId);
+                        predStat.execute();
+                    }
+                }
+            }catch (Exception ex){
+                throw new IllegalArgumentException("Error. Ошибка записи шаблонов в MySql. Шаблон:!!!" + currentFish + "\n" + ex.getMessage());
             }
     }
 }

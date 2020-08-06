@@ -1,6 +1,13 @@
 SET NAMES 'UTF8';
 SHOW CREATE TABLE CATEGORY_FISHES;
 
+//быстрая отчистка таблиц.!!! Не забудь, про наличие записей в Категориях и Департаментах (отделах) 
+DELETE FROM DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES;
+DELETE FROM FISH_CATEGORY_SUBCATEGORIES;
+DELETE FROM FISH_SUBCATEGORIES;
+DELETE FROM FISH_SUBCATEGORIES_FISHES;
+DELETE FROM FISHES;
+
 CREATE TABLE FISH_CATEGORIES (
     category_id int(11) NOT NULL AUTO_INCREMENT,
     cod_vdovkin int(3) NOT NULL,
@@ -34,7 +41,7 @@ CREATE TABLE FISH_CATEGORY_SUBCATEGORIES (
 DROP TABLE FISH_CATEGORY_SUBCATEGORIES;
 SELECT * FROM FISH_CATEGORY_SUBCATEGORIES;
 DELETE FROM FISH_CATEGORY_SUBCATEGORIES;
-INSERT INTO FISH_CATEGORY_SUBCATEGORIES (category_id, subcategory_id) VALUES ();
+INSERT INTO FISH_CATEGORY_SUBCATEGORIES (category_id, subcategory_id) VALUES (1, 1);
 SELECT MAX(id) FROM FISH_CATEGORY_SUBCATEGORIES;
 
 CREATE TABLE FISH_SUBCATEGORIES (
@@ -53,7 +60,7 @@ SELECT * FROM FISH_SUBCATEGORIES subCategory
     inner join FISH_CATEGORIES category on category.category_id = subCategoryOfCategory.category_id
     inner join DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES dfcs on dfcs.category_subcategories_id = subCategoryOfCategory.id
     inner join DEPARTMENTS department on department.id = dfcs.department_id
-    WHERE category.category_id = 1 AND department.name = 'НК2';
+    WHERE category.category_id = 13 AND department.name = 'НК2';
 
 CREATE TABLE DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES (
     id int(11) NOT NULL AUTO_INCREMENT,
@@ -73,7 +80,48 @@ CREATE TABLE DEPARTMENTS(
 INSERT INTO DEPARTMENTS (name) VALUES ('НК2');
 SELECT * FROM DEPARTMENTS dep WHERE dep.name = 'НК2';
 
+CREATE TABLE FISH_SUBCATEGORIES_FISHES (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    subcategory_id int(11) NOT NULL,
+    fish_id int(11) NOT NULL,
+    PRIMARY KEY (id)
+    );
+INSERT INTO FISH_SUBCATEGORIES_FISHES (subcategory_id, fish_id) VALUES (1, 1);
+SELECT * FROM FISH_SUBCATEGORIES_FISHES;
+DROP TABLE FISH_SUBCATEGORIES_FISHES;
+
+CREATE TABLE FISHES(
+    fish_id int(11) NOT NULL AUTO_INCREMENT,
+    name varchar(150) CHARACTER SET utf8 NOT NULL,
+    code int(6),
+    code_atribute int(2),
+    body MEDIUMTEXT CHARACTER SET utf8 NOT NULL,
+    PRIMARY KEY (fish_id)
+    );
+INSERT INTO FISHES (name, body) VALUES ('','');
+DROP TABLE FISHES;
+SELECT * FROM FISHES fishes
+    inner join FISH_SUBCATEGORIES_FISHES fsf on fishes.fish_id = fsf.fish_id
+    inner join FISH_SUBCATEGORIES fs on fs.subcategory_id = fsf.subcategory_id
+    WHERE fs.subcategory_id = ;
+
+
 //-------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 CREATE TABLE ORDERS(
     order_number varchar(100) not null primary key,

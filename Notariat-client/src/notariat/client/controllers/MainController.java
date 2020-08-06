@@ -69,7 +69,10 @@ public class MainController {
     public Fishes getFishes(FishSubCategory fishSubCategory) {
         try
         {
-            fishes = new Fishes(fishesReaderWriter.readFishes(fishSubCategory, this));
+            fishes = new Fishes(fishesReaderWriter.readFishes(fishSubCategory));
+            //если загружаем из файла старой программы
+            //fishes = new Fishes(fishesReaderWriter.readFishesFromFile(fishSubCategory, this));
+            
             return fishes;
         }
         catch (Exception ex){
