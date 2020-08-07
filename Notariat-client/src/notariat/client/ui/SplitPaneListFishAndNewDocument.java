@@ -18,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import notariat.client.controllers.MainController;
-import notariat.client.models.FishCategory;
 import notariat.client.models.Fish;
 import notariat.client.models.FishSubCategory;
 
