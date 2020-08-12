@@ -1,96 +1,96 @@
 SET NAMES 'UTF8';
-SHOW CREATE TABLE CATEGORY_FISHES;
 
 //быстрая отчистка таблиц.!!! Не забудь, про наличие записей в Категориях и Департаментах (отделах) 
-DELETE FROM DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES;
-DELETE FROM FISH_CATEGORY_SUBCATEGORIES;
-DELETE FROM FISH_SUBCATEGORIES;
-DELETE FROM FISH_SUBCATEGORIES_FISHES;
-DELETE FROM FISHES;
+DELETE FROM department_fish_category_subcategories;
+DELETE FROM fish_category_subcategories;
+DELETE FROM fish_subcategories;
+DELETE FROM fish_subcategories_fishes;
+DELETE FROM fishes;
 
-CREATE TABLE FISH_CATEGORIES (
+CREATE TABLE fish_categories (
     category_id int(11) NOT NULL AUTO_INCREMENT,
     cod_vdovkin int(3) NOT NULL,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
     PRIMARY KEY (category_id)
     );
 
-ALTER TABLE FISH_CATEGORIES DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-ALTER TABLE FISH_CATEGORIES CHANGE name name VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci;
-DROP TABLE FISH_CATEGORIES;
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (1,'Договора');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (2,'Доверенности');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (3,'Завещания');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (4,'Заявления');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (5,'Свидетельства');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (6,'Штампы');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (7,'Прочие');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (10,'Согласия');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (11,'Обязательства');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (12,'Отказы');
-INSERT INTO FISH_CATEGORIES (cod_vdovkin,name) VALUES (13,'Наследство');
-SELECT * FROM FISH_CATEGORIES;
-DELETE FROM FISH_CATEGORIES;
+ALTER TABLE fish_categories DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE fish_categories CHANGE name name VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci;
+DROP TABLE fish_categories;
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (1,'Договора');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (2,'Доверенности');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (3,'Завещания');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (4,'Заявления');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (5,'Свидетельства');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (6,'Штампы');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (7,'Прочие');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (10,'Согласия');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (11,'Обязательства');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (12,'Отказы');
+INSERT INTO fish_categories (cod_vdovkin,name) VALUES (13,'Наследство');
+SELECT * FROM fish_categories;
+DELETE FROM fish_categories;
 
-CREATE TABLE FISH_CATEGORY_SUBCATEGORIES (
+CREATE TABLE fish_category_subcategories (
     id int(11) NOT NULL AUTO_INCREMENT,
     category_id int(11) NOT NULL,
     subcategory_id int(11) NOT NULL,
     PRIMARY KEY (id)
     );
-DROP TABLE FISH_CATEGORY_SUBCATEGORIES;
-SELECT * FROM FISH_CATEGORY_SUBCATEGORIES;
-DELETE FROM FISH_CATEGORY_SUBCATEGORIES;
-INSERT INTO FISH_CATEGORY_SUBCATEGORIES (category_id, subcategory_id) VALUES (1, 1);
-SELECT MAX(id) FROM FISH_CATEGORY_SUBCATEGORIES;
+DROP TABLE fish_category_subcategories;
+SELECT * FROM fish_category_subcategories;
+DELETE FROM fish_category_subcategories;
+INSERT INTO fish_category_subcategories (category_id, subcategory_id) VALUES (1, 1);
+SELECT MAX(id) FROM fish_category_subcategories;
 
-CREATE TABLE FISH_SUBCATEGORIES (
+CREATE TABLE fish_subcategories (
     subcategory_id int(11) NOT NULL AUTO_INCREMENT,
     cod_vdovkin int(3) NOT NULL,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
     PRIMARY KEY (subcategory_id)
     );
-DROP TABLE FISH_SUBCATEGORIES;
-INSERT INTO FISH_SUBCATEGORIES (cod_vdovkin, name) VALUES ();
-SELECT * FROM FISH_SUBCATEGORIES;
-SELECT MAX(subcategory_id) FROM FISH_SUBCATEGORIES;
-DELETE FROM FISH_SUBCATEGORIES;
-SELECT * FROM FISH_SUBCATEGORIES subCategory
-    inner join FISH_CATEGORY_SUBCATEGORIES subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
-    inner join FISH_CATEGORIES category on category.category_id = subCategoryOfCategory.category_id
-    inner join DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES dfcs on dfcs.category_subcategories_id = subCategoryOfCategory.id
-    inner join DEPARTMENTS department on department.id = dfcs.department_id
+DROP TABLE fish_subcategories;
+INSERT INTO fish_subcategories (cod_vdovkin, name) VALUES ();
+SELECT * FROM fish_subcategories;
+SELECT MAX(subcategory_id) FROM fish_subcategories;
+DELETE FROM fish_subcategories;
+SELECT * FROM fish_subcategories subCategory
+    inner join fish_category_subcategories subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
+    inner join fish_categories category on category.category_id = subCategoryOfCategory.category_id
+    inner join department_fish_category_subcategories dfcs on dfcs.category_subcategories_id = subCategoryOfCategory.id
+    inner join departments department on department.id = dfcs.department_id
     WHERE category.category_id = 13 AND department.name = 'НК2';
 
-CREATE TABLE DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES (
+CREATE TABLE department_fish_category_subcategories (
     id int(11) NOT NULL AUTO_INCREMENT,
     category_subcategories_id int(11) NOT NULL,
     department_id int(11) NOT NULL,
     PRIMARY KEY (id)
     );
-INSERT INTO DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES (category_subcategories_id, department_id) VALUES (?, ?);
-SELECT * FROM DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES;
-DROP TABLE DEPARTMENT_FISH_CATEGORY_SUBCATEGORIES;
+INSERT INTO department_fish_category_subcategories (category_subcategories_id, department_id) VALUES (?, ?);
+SELECT * FROM department_fish_category_subcategories;
+DROP TABLE department_fish_category_subcategories;
 
-CREATE TABLE DEPARTMENTS(
+CREATE TABLE departments(
     id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
     PRIMARY KEY (id)
     );
-INSERT INTO DEPARTMENTS (name) VALUES ('НК2');
-SELECT * FROM DEPARTMENTS dep WHERE dep.name = 'НК2';
+INSERT INTO departments (name) VALUES ('НК2');
+SELECT * FROM departments dep WHERE dep.name = 'НК2';
+DROP TABLE departments;
 
-CREATE TABLE FISH_SUBCATEGORIES_FISHES (
+CREATE TABLE fish_subcategories_fishes (
     id int(11) NOT NULL AUTO_INCREMENT,
     subcategory_id int(11) NOT NULL,
     fish_id int(11) NOT NULL,
     PRIMARY KEY (id)
     );
-INSERT INTO FISH_SUBCATEGORIES_FISHES (subcategory_id, fish_id) VALUES (1, 1);
-SELECT * FROM FISH_SUBCATEGORIES_FISHES;
-DROP TABLE FISH_SUBCATEGORIES_FISHES;
+INSERT INTO fish_subcategories_fishes (subcategory_id, fish_id) VALUES (1, 1);
+SELECT * FROM fish_subcategories_fishes;
+DROP TABLE fish_subcategories_fishes;
 
-CREATE TABLE FISHES(
+CREATE TABLE fishes(
     fish_id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(150) CHARACTER SET utf8 NOT NULL,
     code int(6),
@@ -98,11 +98,11 @@ CREATE TABLE FISHES(
     body MEDIUMTEXT CHARACTER SET utf8 NOT NULL,
     PRIMARY KEY (fish_id)
     );
-INSERT INTO FISHES (name, body) VALUES ('','');
-DROP TABLE FISHES;
-SELECT * FROM FISHES fishes
-    inner join FISH_SUBCATEGORIES_FISHES fsf on fishes.fish_id = fsf.fish_id
-    inner join FISH_SUBCATEGORIES fs on fs.subcategory_id = fsf.subcategory_id
+INSERT INTO fishes (name, body) VALUES ('','');
+DROP TABLE fishes;
+SELECT * FROM fishes fishes
+    inner join fish_subcategories_fishes fsf on fishes.fish_id = fsf.fish_id
+    inner join fish_subcategories fs on fs.subcategory_id = fsf.subcategory_id
     WHERE fs.subcategory_id = ;
 
 
