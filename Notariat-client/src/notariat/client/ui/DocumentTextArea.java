@@ -6,10 +6,14 @@
 package notariat.client.ui;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import notariat.client.controllers.MainController;
+import notariat.client.models.KeyMacro;
 
 /**
  *
@@ -59,6 +63,22 @@ public class DocumentTextArea {
         keyEventEscape();
         //----------------------------------------------------------------
         
+        //инициализация макросов
+        for (KeyMacro keyMacro: mainController.getKeyMacros().getKeyMacros()){
+            if(keyMacro.getKeyCode() != null){
+                KeyCodeCombination codeCombination = new KeyCodeCombination(keyMacro.getKeyCode(), KeyCombination.ALT_DOWN);
+                documentTextArea.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
+                    @Override
+                    public void handle(KeyEvent event) {
+                        if (codeCombination.match(event) && event.getSource() == documentTextArea){
+                            int position = documentTextArea.getCaretPosition();
+                            documentTextArea.insertText(position, keyMacro.getMacro_body());
+                            documentTextArea.positionCaret(position);
+                            ;
+                        }}
+                });
+            }
+        }
     }
     
     public void keyEventEscape(){
@@ -71,5 +91,6 @@ public class DocumentTextArea {
             }
         });
     };
+    
     
 }

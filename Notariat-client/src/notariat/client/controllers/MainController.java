@@ -22,20 +22,26 @@ public class MainController {
     private FishCategories fishCategories;
     private FishSubCategories fishSubCategories;
     private FishesReaderWriter fishesReaderWriter;
+    private KeyMacros keyMacros;
+    private KeyMacrosReaderWriter keyMacrosReaderWriter;
     
     public MainController() throws IOException {
         
         documents = new Documents();
         
-        
         try
         {
             fishesReaderWriter = new FishesReaderWriter();
             fishCategories = new FishCategories(fishesReaderWriter.readFishCategories());
+        
+            keyMacrosReaderWriter = new KeyMacrosReaderWriter();
+            keyMacros = new KeyMacros(keyMacrosReaderWriter.readKeyMacrosFromFile());
         }
         catch (Exception ex){
             throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
         }
+        
+        
     }
     
     public static MainController getInstance() {
@@ -87,6 +93,10 @@ public class MainController {
     
     public FishesReaderWriter getFishesReaderWriter() {
         return fishesReaderWriter;
+    }
+
+    public KeyMacros getKeyMacros() {
+        return keyMacros;
     }
     
     
