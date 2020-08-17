@@ -105,6 +105,19 @@ SELECT * FROM fishes fishes
     inner join fish_subcategories fs on fs.subcategory_id = fsf.subcategory_id
     WHERE fs.subcategory_id = ;
 
+CREATE TABLE keyMacros(
+    keyMacro_id int(11) NOT NULL AUTO_INCREMENT,
+    department_id int(11) NOT NULL,
+    keyMacro varchar(10) CHARACTER SET utf8 NOT NULL,
+    macro_body TEXT CHARACTER SET utf8 NOT NULL,
+    PRIMARY KEY (keyMacro_id)
+    );
+DROP TABLE keyMacros;
+SELECT * FROM keyMacros km
+    INNER JOIN departments d on km.department_id = d.id 
+    WHERE d.`name` = 'НК2';
+DELETE FROM keyMacros;
+
 
 //-------------------------------------------------------------------
 

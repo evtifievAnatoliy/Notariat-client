@@ -35,7 +35,7 @@ public class MainController {
             fishCategories = new FishCategories(fishesReaderWriter.readFishCategories());
         
             keyMacrosReaderWriter = new KeyMacrosReaderWriter();
-            keyMacros = new KeyMacros(keyMacrosReaderWriter.readKeyMacrosFromFile());
+            keyMacros = new KeyMacros(keyMacrosReaderWriter.readKeyMacros());
         }
         catch (Exception ex){
             throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
@@ -98,6 +98,11 @@ public class MainController {
     public KeyMacros getKeyMacros() {
         return keyMacros;
     }
+
+    public KeyMacrosReaderWriter getKeyMacrosReaderWriter() {
+        return keyMacrosReaderWriter;
+    }
+    
     
     
     

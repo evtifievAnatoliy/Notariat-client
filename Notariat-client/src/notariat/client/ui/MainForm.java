@@ -42,7 +42,8 @@ public class MainForm {
     private Label labelNewDocument;
     private Label labelBaseWorkDay;
     private Menu  menuSettings;
-    private MenuItem menuItemSettingsFishes;
+    private MenuItem menuItemLoadFishes;
+    private MenuItem menuItemLoadKeyMacros;
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
     
@@ -79,8 +80,11 @@ public class MainForm {
         
         MenuBar rightMenuBar = new MenuBar();
         menuSettings = new Menu("Настройки");
-        menuItemSettingsFishes = new MenuItem("Шаблоны");
-        menuSettings.getItems().add(menuItemSettingsFishes);
+        menuItemLoadFishes = new MenuItem("Загрузить шаблоны");
+        menuSettings.getItems().add(menuItemLoadFishes);
+        menuItemLoadKeyMacros = new MenuItem("Загрузить макросы");
+        menuSettings.getItems().add(menuItemLoadKeyMacros);
+        
         Menu menuExit = new Menu("Выход");
         menuItemExit = new MenuItem("Выход");
         menuExit.getItems().add(menuItemExit);
@@ -166,17 +170,37 @@ public class MainForm {
             }
         });
         
-        // событие по нажатию пункта меню "Шаблоны в настройках" 
-        menuItemSettingsFishes.setOnAction(new EventHandler<ActionEvent>() {
+        // событие по нажатию пункта меню "Загрузить Шаблоны в настройках" 
+        menuItemLoadFishes.setOnAction(new EventHandler<ActionEvent>() {
         @Override
             public void handle(ActionEvent event) {
                 informationTextArea.clear();
-                informationTextArea.setText("Загрузка началась: \n");
+                informationTextArea.setText("Загрузка шаблонов началась: \n");
                 setStackPane(informationTextArea);
-                loadFishSubCategoriesFromVdovkinToMySql(mainController.getFishCategories().getFishCategories());
-                Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка шаблонов закончена.", ButtonType.OK);
-                alert.showAndWait();
-                
+                try{
+                    loadFishSubCategoriesFromVdovkinToMySql(mainController.getFishCategories().getFishCategories());
+                    Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка шаблонов закончена.", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                catch(Exception ex){
+                    Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка шаблонов выполнена с ошибкой." + ex.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                }
+            }
+        });
+        // событие по нажатию пункта меню "Загрузить макросы в настройках" 
+        menuItemLoadKeyMacros.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+            public void handle(ActionEvent event) {
+                try{
+                    mainController.getKeyMacrosReaderWriter().readKeyMacrosFromFileAndWriteToMySQL();
+                    Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка макросов закончена.", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                catch(Exception ex){
+                    Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка макросов выполнена с ошибкой." + ex.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                }
             }
         });
         // событие по нажатию Esc "Информационного текстового поля" 
