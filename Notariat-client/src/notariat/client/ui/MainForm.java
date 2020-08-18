@@ -23,6 +23,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
 import notariat.client.models.FishCategory;
@@ -44,6 +46,7 @@ public class MainForm {
     private Menu  menuSettings;
     private MenuItem menuItemLoadFishes;
     private MenuItem menuItemLoadKeyMacros;
+    private MenuItem menuItemSettingsKeyMacros;
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
     
@@ -84,6 +87,9 @@ public class MainForm {
         menuSettings.getItems().add(menuItemLoadFishes);
         menuItemLoadKeyMacros = new MenuItem("Загрузить макросы");
         menuSettings.getItems().add(menuItemLoadKeyMacros);
+        menuItemSettingsKeyMacros = new MenuItem("Настроить макросы");
+        menuSettings.getItems().add(menuItemSettingsKeyMacros);
+        
         
         Menu menuExit = new Menu("Выход");
         menuItemExit = new MenuItem("Выход");
@@ -203,6 +209,30 @@ public class MainForm {
                 }
             }
         });
+        // событие по нажатию пункта меню "Настроить макросы в настройках" 
+        menuItemSettingsKeyMacros.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+            public void handle(ActionEvent event) {
+                try{
+                                       
+                    AbstractModalDialog abstractModalDialog = new AbstractModalDialog(primaryStage ,"Настройка макросов");
+                    if (abstractModalDialog.isSuccess()){
+                        Alert alert = new Alert(Alert.AlertType.NONE, "OK", ButtonType.OK);
+                        alert.showAndWait();
+                    }
+                    if (!abstractModalDialog.isSuccess()){
+                        Alert alert = new Alert(Alert.AlertType.NONE, "ESC", ButtonType.OK);
+                        alert.showAndWait();
+                    }
+                        
+                }
+                catch(Exception ex){
+                    Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка макросов выполнена с ошибкой." + ex.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                }
+            }
+        });
+        
         // событие по нажатию Esc "Информационного текстового поля" 
         informationTextArea.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){
             @Override
