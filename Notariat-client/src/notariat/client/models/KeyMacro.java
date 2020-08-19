@@ -5,13 +5,14 @@
  */
 package notariat.client.models;
 
+import java.util.Comparator;
 import javafx.scene.input.KeyCode;
 
 /**
  *
  * @author eag
  */
-public class KeyMacro {
+public class KeyMacro implements Comparable<KeyMacro>{
     private int id;
     private String key;
     private String macro_body;
@@ -81,5 +82,23 @@ public class KeyMacro {
                         else return null;
 		
     }
+
+    @Override
+    public String toString() {
+        return "Alt - " + key;
+    }
+
+    @Override
+    public int compareTo(KeyMacro key) {
+        return this.key.compareTo(key.getKey());
+    }
+    //Comparator для сортировки списка или массива объектов по имени
+    public static Comparator<KeyMacro> NameComparator = new Comparator<KeyMacro>() {
+ 
+        @Override
+        public int compare(KeyMacro key1, KeyMacro key2) {
+            return key1.getKey().compareTo(key2.getKey());
+        }
+    };
     
 }

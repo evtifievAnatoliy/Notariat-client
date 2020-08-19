@@ -23,8 +23,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
 import notariat.client.models.FishCategory;
@@ -38,6 +36,7 @@ public class MainForm {
     
     private MainController mainController;
     private double mainWindowWidth;
+    private double mainWindowHeight;
     
     private Stage primaryStage;
     private Menu menuNewDocument;
@@ -66,7 +65,7 @@ public class MainForm {
         primaryStage.setHeight(monitorSize.height - monitorSize.height/8);
         primaryStage.initStyle(StageStyle.DECORATED);
         mainWindowWidth = monitorSize.getWidth(); //от ширины разрешения экрана
-        //mainWindowWidth = primaryStage.getWidth(); //от ширины окна приложения
+        mainWindowHeight = primaryStage.getHeight(); //от ширины окна приложения
         
         
         // отрисовываем меню
@@ -215,15 +214,17 @@ public class MainForm {
             public void handle(ActionEvent event) {
                 try{
                                        
-                    AbstractModalDialog abstractModalDialog = new AbstractModalDialog(primaryStage ,"Настройка макросов");
-                    if (abstractModalDialog.isSuccess()){
+                    KeyMacrosEditModalDialog keyMacrosEditModalDialog = new  KeyMacrosEditModalDialog(primaryStage ,"Настройка макросов", 
+                            mainWindowWidth, mainWindowHeight, mainController);
+                    keyMacrosEditModalDialog.showAndWait();
+                    /*if (abstractModalDialog.isSuccess()){
                         Alert alert = new Alert(Alert.AlertType.NONE, "OK", ButtonType.OK);
                         alert.showAndWait();
                     }
                     if (!abstractModalDialog.isSuccess()){
                         Alert alert = new Alert(Alert.AlertType.NONE, "ESC", ButtonType.OK);
                         alert.showAndWait();
-                    }
+                    }*/
                         
                 }
                 catch(Exception ex){
