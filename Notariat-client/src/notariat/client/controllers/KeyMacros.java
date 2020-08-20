@@ -5,6 +5,8 @@
  */
 package notariat.client.controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.scene.input.KeyCode;
 import notariat.client.models.KeyMacro;
@@ -25,6 +27,15 @@ public class KeyMacros {
         return keyMacros;
     }
     
+    public void updateKeyMacro(KeyMacro updateKeyMacro, MainController mainController) throws SQLException, IOException{
+        for (KeyMacro keyMacro: keyMacros){
+            if (keyMacro.getId() == updateKeyMacro.getId()){
+                keyMacro.setMacro_body(updateKeyMacro.getMacro_body());
+                mainController.getKeyMacrosReaderWriter().updateKeyMacroInMySQL(keyMacro);
+            }
+        }
+            
+    }
     
 
 }

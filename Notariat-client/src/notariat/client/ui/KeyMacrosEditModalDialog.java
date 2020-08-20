@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SplitPane;
@@ -37,8 +38,9 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons
     
     private SplitPane splitPaneKeyMacrosAndKeyBody;
     private ListView<KeyMacro> keyMakrosListView;
-    
     private TextArea keyMacroBodyTextArea;
+    
+    KeyMacro choosenKeyMacro = null;
     
     public KeyMacrosEditModalDialog(Stage primaryStage, String title, double width, double height, MainController mainController) {
         super(primaryStage, title, width/2, height/2);
@@ -59,8 +61,10 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons
             
         splitPaneKeyMacrosAndKeyBody = new SplitPane();
         splitPaneKeyMacrosAndKeyBody.getItems().addAll(keyMakrosListView, new BorderPane(keyMacroBodyTextArea));
+        Label lbl = new Label("F10 Сохранить изменения.");
         
         mainPane.setCenter(splitPaneKeyMacrosAndKeyBody);
+        mainPane.setTop(new BorderPane(lbl));
         
         setKeyMakrosListView();
         setSizeOfComponents(mainWindowWidth);
@@ -88,7 +92,7 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons
         double listViewWight = windowWight/5;
         keyMakrosListView.setMinWidth(listViewWight);
         keyMakrosListView.setMaxWidth(listViewWight);
-        double textAreaWight = listViewWight*4;
+        double textAreaWight = listViewWight*4 - 20;
         keyMacroBodyTextArea.setMinWidth(textAreaWight);
         keyMacroBodyTextArea.setMaxWidth(textAreaWight);
         splitPaneKeyMacrosAndKeyBody.setDividerPositions(listViewWight);
@@ -113,7 +117,8 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER){ 
-                    keyMacroBodyTextArea.setText(keyMakrosListViewSelectionModel.getSelectedItem().getMacro_body());
+                    choosenKeyMacro = keyMakrosListViewSelectionModel.getSelectedItem();
+                    keyMacroBodyTextArea.setText(choosenKeyMacro.getMacro_body());
                     keyMacroBodyTextArea.requestFocus();
                 }
             }
@@ -126,7 +131,32 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE){ 
+                    keyMacroBodyTextArea.clear();
+                    choosenKeyMacro = null;
                     keyMakrosListView.requestFocus();
+                }
+            }
+        });
+        
+        keyMacroBodyTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию F10
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.F10){ 
+                    try{
+                        choosenKeyMacro.setMacro_body(keyMacroBodyTextArea.getText());
+                        mainController.getKeyMacros().updateKeyMacro(choosenKeyMacro, mainController);
+                        setKeyMakrosListView();
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Обновление макроса Alt - " + choosenKeyMacro.getKey() + 
+                                " выполнено успешно.", ButtonType.OK);
+                        choosenKeyMacro = null;
+                        alert.showAndWait();
+                    }
+                    catch (Exception e){
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Обновление макроса Alt - " + choosenKeyMacro.getKey() + 
+                                " выполнено с ошибкой. \n" + e.getMessage(), ButtonType.OK);
+                        choosenKeyMacro = null; 
+                        alert.showAndWait();
+                    }
                 }
             }
         });

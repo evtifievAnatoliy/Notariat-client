@@ -31,8 +31,10 @@ public class KeyMacro implements Comparable<KeyMacro>{
     public void setMacro_body(String macro_body) {
         this.macro_body = macro_body;
     }
-    
-    
+
+    public int getId() {
+        return id;
+    }
     
     public String getKey() {
         return key;

@@ -116,6 +116,7 @@ DROP TABLE keyMacros;
 SELECT * FROM keyMacros km
     INNER JOIN departments d on km.department_id = d.id 
     WHERE d.`name` = 'НК2';
+UPDATE keyMacros SET macro_body = 'Проверка' WHERE keyMacro_id =  120;
 DELETE FROM keyMacros;
 
 
