@@ -31,7 +31,7 @@ import notariat.client.models.KeyMacro;
  *
  * @author user
  */
-public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons{
+public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithOneButton{
     
     private double mainWindowWidth;
     private MainController mainController;
@@ -107,6 +107,7 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithTwoButtons
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
+                    choosenKeyMacro = keyMakrosListViewSelectionModel.getSelectedItem();
                     keyMacroBodyTextArea.setText(keyMakrosListViewSelectionModel.getSelectedItem().getMacro_body());
                     keyMacroBodyTextArea.requestFocus();
                 }
