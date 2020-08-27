@@ -17,15 +17,16 @@ public class KeyMacro implements Comparable<KeyMacro>{
     private String key;
     private String macro_body;
 
-    public KeyMacro(int id, String key, String macro_body) {
-        this.id = id;
-        this.key = key;
-        this.macro_body = macro_body;
-    }
+    
 
     public KeyMacro(String key, String macro_body) {
         this.key = key;
         this.macro_body = macro_body;
+    }
+    
+    public KeyMacro(int id, String key, String macro_body) {
+        this(key, macro_body);
+        this.id = id;
     }
 
     public void setMacro_body(String macro_body) {

@@ -20,6 +20,11 @@ public class Fish {
         this.fish_name = fish_name;
         this.fish_body = fish_body;
     }
+    
+    public Fish(int id, String fish_name, String fish_body) {
+        this(fish_name, fish_body);
+        this.key = id;
+    }
 
     public String getFish_body() {
         return fish_body;
@@ -29,9 +34,19 @@ public class Fish {
         return fish_name;
     }
 
+    public int getKey() {
+        return key;
+    }
+
+    
+    
     @Override
     public String toString() {
         return fish_name;
+    }
+
+    public void setFish_body(String fish_body) {
+        this.fish_body = fish_body;
     }
     
     

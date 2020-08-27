@@ -5,8 +5,11 @@
  */
 package notariat.client.controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import notariat.client.models.Fish;
+import notariat.client.models.KeyMacro;
 
 /**
  *
@@ -22,5 +25,15 @@ public class Fishes {
 
     public ArrayList<Fish> getFishes() {
         return fishes;
+    }
+    
+    public void updateFish(Fish updateFish, MainController mainController) throws SQLException, IOException{
+        for (Fish fish: fishes){
+            if (fish.getKey()== updateFish.getKey()){
+                fish.setFish_body(updateFish.getFish_body());
+                mainController.getFishesReaderWriter().updateFishInMySQL(fish);
+            }
+        }
+            
     }
 }

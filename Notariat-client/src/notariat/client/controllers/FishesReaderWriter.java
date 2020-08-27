@@ -108,7 +108,7 @@ public class FishesReaderWriter {
                         ArrayList<Fish> fishes = new ArrayList<Fish>();
                         while (rs.next()) {
                             // пробуем создать объект шаблон и добавить его в коллекцию
-                            Fish fish = new Fish(rs.getString("name"), rs.getString("body"));
+                            Fish fish = new Fish(rs.getInt("fish_id"), rs.getString("name"), rs.getString("body"));
                             fishes.add(fish);
                         }
                         return fishes;
@@ -119,6 +119,24 @@ public class FishesReaderWriter {
         catch(SQLException ex){
             throw new IllegalArgumentException("Error. Ошибка чтения  Шаблонов из базы данных.!!!\n" + ex.getMessage());
         }
+    }
+    
+    public void updateFishInMySQL(Fish fish) throws IOException, SQLException{
+            
+        // загружаем макросы в MySql
+        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                Configuration.getInstance().getProperty("user.Db"),
+                Configuration.getInstance().getProperty("password.Db"))){
+            
+            final String reportKeyMacro = "UPDATE fishes SET body = ? WHERE fish_id = ?";
+            try(PreparedStatement predStat = connection.prepareStatement(reportKeyMacro)){
+                predStat.setObject(1, fish.getFish_body());
+                predStat.setObject(2, fish.getKey());
+                predStat.executeUpdate();
+            }
+                
+        }
+        
     }
 
     //-------------------------------------------
