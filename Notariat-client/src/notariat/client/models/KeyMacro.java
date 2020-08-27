@@ -55,10 +55,8 @@ public class KeyMacro implements Comparable<KeyMacro>{
                         if(key.equals("Л")) return KeyCode.K;
                         if(key.equals("Д")) return KeyCode.L;
                         if(key.equals("Ж")) return KeyCode.SEMICOLON;
-//                        if(key.equals("Э")){
-//                            System.out.println(KeyCode.valueOf(":").toString());
-//                            return KeyCode.valueOf(":");
-//                        }
+                        if(key.equals("Э"))return KeyCode.QUOTE;
+                        
                         
                         if(key.equals("Й")) return KeyCode.Q;
                         if(key.equals("Ц")) return KeyCode.W;

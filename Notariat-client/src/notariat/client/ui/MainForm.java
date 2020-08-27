@@ -53,6 +53,7 @@ public class MainForm {
     private MenuItem menuItemLoadFishes;
     private MenuItem menuItemLoadKeyMacros;
     private MenuItem menuItemSettingsKeyMacros;
+    private MenuItem menuItemSettingsFishes;
     private MenuItem menuItemExit;
     private StackPane mainStackPane;
     
@@ -95,6 +96,8 @@ public class MainForm {
         menuSettings.getItems().add(menuItemLoadKeyMacros);
         menuItemSettingsKeyMacros = new MenuItem("Настроить макросы");
         menuSettings.getItems().add(menuItemSettingsKeyMacros);
+        menuItemSettingsFishes = new MenuItem("Настроить шаблоны");
+        menuSettings.getItems().add(menuItemSettingsFishes);
         
         
         Menu menuExit = new Menu("Выход");
@@ -217,24 +220,14 @@ public class MainForm {
                 }
             }
         });
-        // событие по нажатию пункта меню "Настроить макросы в настройках" 
-        menuItemSettingsKeyMacros.setOnAction(new EventHandler<ActionEvent>() {
+        // событие по нажатию пункта меню "Настроить шаблоны в настройках" 
+        menuItemSettingsFishes.setOnAction(new EventHandler<ActionEvent>() {
         @Override
             public void handle(ActionEvent event) {
                 try{
-                                       
-                    KeyMacrosEditModalDialog keyMacrosEditModalDialog = new  KeyMacrosEditModalDialog(primaryStage ,"Настройка макросов", 
+                    FishesEditModalDialog fishesEditModalDialog = new  FishesEditModalDialog(primaryStage ,"Настройка шаблонов", 
                             mainWindowWidth, mainWindowHeight, mainController);
-                    keyMacrosEditModalDialog.showAndWait();
-                    /*if (abstractModalDialog.isSuccess()){
-                        Alert alert = new Alert(Alert.AlertType.NONE, "OK", ButtonType.OK);
-                        alert.showAndWait();
-                    }
-                    if (!abstractModalDialog.isSuccess()){
-                        Alert alert = new Alert(Alert.AlertType.NONE, "ESC", ButtonType.OK);
-                        alert.showAndWait();
-                    }*/
-                        
+                    fishesEditModalDialog.showAndWait();
                 }
                 catch(Exception ex){
                     Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка макросов выполнена с ошибкой." + ex.getMessage(), ButtonType.OK);
@@ -242,6 +235,22 @@ public class MainForm {
                 }
             }
         });
+        // событие по нажатию пункта меню "Настроить макросы в настройках" 
+        menuItemSettingsKeyMacros.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+            public void handle(ActionEvent event) {
+                try{
+                    KeyMacrosEditModalDialog keyMacrosEditModalDialog = new  KeyMacrosEditModalDialog(primaryStage ,"Настройка макросов", 
+                            mainWindowWidth, mainWindowHeight, mainController);
+                    keyMacrosEditModalDialog.showAndWait();
+                }
+                catch(Exception ex){
+                    Alert alert = new Alert(Alert.AlertType.NONE, "Загрузка макросов выполнена с ошибкой." + ex.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                }
+            }
+        });
+        
         
         // событие по нажатию Esc "Информационного текстового поля" 
         informationTextArea.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){

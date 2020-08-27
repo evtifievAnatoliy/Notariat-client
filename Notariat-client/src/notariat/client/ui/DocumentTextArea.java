@@ -82,15 +82,6 @@ public class DocumentTextArea {
             }
         }
         
-        // удалить
-        documentTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
-            @Override
-            public void handle(KeyEvent event) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, event.getClass().toString(),  ButtonType.OK);
-                alert.showAndWait();
-            }
-        });
-//        // удалить
     }
     
     public void keyEventEscape(){
