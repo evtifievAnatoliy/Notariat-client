@@ -27,7 +27,7 @@ public class NotariatClient extends Application{
             MainForm mainForm = new MainForm(primaryStage);
         }
         catch(Exception ex){
-            // запись в лог
+            System.out.println("Error:" + ex.getMessage());
         }
     }
 

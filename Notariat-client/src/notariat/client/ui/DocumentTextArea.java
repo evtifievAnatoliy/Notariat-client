@@ -7,6 +7,8 @@ package notariat.client.ui;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -79,6 +81,16 @@ public class DocumentTextArea {
                 });
             }
         }
+        
+        // удалить
+        documentTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
+            @Override
+            public void handle(KeyEvent event) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, event.getClass().toString(),  ButtonType.OK);
+                alert.showAndWait();
+            }
+        });
+//        // удалить
     }
     
     public void keyEventEscape(){

@@ -54,8 +54,11 @@ public class KeyMacro implements Comparable<KeyMacro>{
                         if(key.equals("О")) return KeyCode.J;
                         if(key.equals("Л")) return KeyCode.K;
                         if(key.equals("Д")) return KeyCode.L;
-                        //if(code.equals("Ж")) return KeyCode.;
-                        //if(code.equals("Э")) return KeyCode.;
+                        if(key.equals("Ж")) return KeyCode.SEMICOLON;
+//                        if(key.equals("Э")){
+//                            System.out.println(KeyCode.valueOf(":").toString());
+//                            return KeyCode.valueOf(":");
+//                        }
                         
                         if(key.equals("Й")) return KeyCode.Q;
                         if(key.equals("Ц")) return KeyCode.W;
@@ -67,8 +70,8 @@ public class KeyMacro implements Comparable<KeyMacro>{
                         if(key.equals("Ш")) return KeyCode.I;
                         if(key.equals("Щ")) return KeyCode.O;
                         if(key.equals("З")) return KeyCode.P;
-                        //if(code.equals("Х")) return KeyCode.;
-                        //if(code.equals("Ъ")) return KeyCode.;
+                        if(key.equals("Х")) return KeyCode.OPEN_BRACKET;
+                        if(key.equals("Ъ")) return KeyCode.CLOSE_BRACKET;
                         
                         if(key.equals("Я")) return KeyCode.Z;
                         if(key.equals("Ч")) return KeyCode.X;
@@ -77,9 +80,19 @@ public class KeyMacro implements Comparable<KeyMacro>{
                         if(key.equals("И")) return KeyCode.B;
                         if(key.equals("Т")) return KeyCode.N;
                         if(key.equals("Ь")) return KeyCode.M;
-                        //if(code.equals("Б")) return KeyCode.;
-                        //if(code.equals("Ю")) return KeyCode.;
+                        if(key.equals("Б")) return KeyCode.COMMA;
+                        if(key.equals("Ю")) return KeyCode.COLON;
                         
+                        if(key.equals("1")) return KeyCode.DIGIT1;
+                        if(key.equals("2")) return KeyCode.DIGIT2;
+                        if(key.equals("3")) return KeyCode.DIGIT3;
+                        if(key.equals("4")) return KeyCode.DIGIT4;
+                        if(key.equals("5")) return KeyCode.DIGIT5;
+                        if(key.equals("6")) return KeyCode.DIGIT6;
+                        if(key.equals("7")) return KeyCode.DIGIT7;
+                        if(key.equals("8")) return KeyCode.DIGIT8;
+                        if(key.equals("9")) return KeyCode.DIGIT9;
+                        if(key.equals("0")) return KeyCode.DIGIT0;
                         
                         else return null;
 		

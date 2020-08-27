@@ -7,6 +7,9 @@ package notariat.client.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,6 +18,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -23,6 +28,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import notariat.client.configuration.Configuration;
 import notariat.client.controllers.MainController;
 import notariat.client.models.FishCategory;
@@ -104,6 +111,8 @@ public class MainForm {
         
         BorderPane mainPane = new BorderPane();
         mainPane.setTop(controlPane);
+        
+        
         // -------------------------------------------
         
         // отрисовываем элементы компановки StackPane. Окна будут находится на разных слоях
