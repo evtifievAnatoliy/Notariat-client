@@ -63,8 +63,8 @@ public class KeyMacrosEditModalDialog  extends AbstractModalDialogWithOneButton{
         splitPaneKeyMacrosAndKeyBody.getItems().addAll(keyMakrosListView, new BorderPane(keyMacroBodyTextArea));
         Label lbl = new Label("F10 Сохранить изменения.");
         
-        mainPane.setCenter(splitPaneKeyMacrosAndKeyBody);
-        mainPane.setTop(new BorderPane(lbl));
+        getMainPane().setCenter(splitPaneKeyMacrosAndKeyBody);
+        getMainPane().setTop(new BorderPane(lbl));
         
         setKeyMakrosListView();
         setSizeOfComponents(mainWindowWidth);

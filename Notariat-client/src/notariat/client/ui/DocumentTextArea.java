@@ -82,6 +82,14 @@ public class DocumentTextArea {
             }
         }
         
+        //событие по изменению фокуса
+        documentTextArea.focusedProperty().addListener( (obs, oldValue, newValue) -> {
+        if (newValue) { /* при получении фокуса */ }
+        else { /* при потере */ 
+            documentTextArea.clear();
+        }
+        });
+        
     }
     
     public void keyEventEscape(){

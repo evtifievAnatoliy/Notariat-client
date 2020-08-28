@@ -16,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -25,6 +26,7 @@ import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -50,8 +52,14 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
     private ListView<Fish> fishListView;
     private StackPane listStackPane;
     private DocumentTextArea newDocumentTextArea;
-    MultipleSelectionModel<FishSubCategory> fishSubCategoriesListViewSelectionModel;
-            
+    private MultipleSelectionModel<FishSubCategory> fishSubCategoriesListViewSelectionModel;
+    
+    private ContextMenu contextMenuFishListView;
+    private MenuItem contextMenuAddFishInListView;
+    private ContextMenu contextMenuSubCategoriesListView;
+    private MenuItem contextMenuAddSubCategoriesListView;
+    
+    
     Fish choosenFish = null;
     
     public FishesEditModalDialog(Stage primaryStage, String title, double width, double height, MainController mainController) throws IOException {
@@ -95,19 +103,23 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                     }       
                 });
             }
-            public void initializationOfAllActionListeners(){
-                
-            }
-            
+                        
         };
         splitPaneListFishesAndNewDocument = new SplitPane();
         listStackPane = new StackPane();
         splitPaneListFishesAndNewDocument.getItems().addAll(listStackPane, new BorderPane(newDocumentTextArea.getDocumentTextArea()));
         
                
-        mainPane.setCenter(splitPaneListFishesAndNewDocument);
-        mainPane.setTop(menuBar);
+        getMainPane().setCenter(splitPaneListFishesAndNewDocument);
+        getMainPane().setTop(menuBar);
         
+        // добавляем контекстное меню добавить и удалить категории и подкатегории шаблонов
+        contextMenuFishListView = new ContextMenu();
+        contextMenuAddFishInListView = new MenuItem("Добавить");
+        contextMenuFishListView.getItems().addAll(contextMenuAddFishInListView);
+        contextMenuSubCategoriesListView = new ContextMenu();
+        contextMenuAddSubCategoriesListView = new MenuItem("Добавить");
+        contextMenuSubCategoriesListView.getItems().addAll(contextMenuAddSubCategoriesListView);
         
         setStackPane(fishSubCategoriesListView);
         setSizeOfComponents(mainWindowWidth);
@@ -221,6 +233,34 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                 }
             }
         });
+        fishSubCategoriesListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY){ //>1 для двойного нажатия //>0 для одинарного
+                    contextMenuSubCategoriesListView.show(fishSubCategoriesListView, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+        contextMenuAddSubCategoriesListView.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    LabelAndTextFieldModalDialog labelAndTextFieldModalDialog = 
+                            new LabelAndTextFieldModalDialog(getPrimaryStage(), "Добавить подкатегорию шаблонов", 400, 150, "Введите имя подкатегории:");
+                    labelAndTextFieldModalDialog.showAndWait();
+                    if(labelAndTextFieldModalDialog.isSuccess()){
+                        try{
+                        /
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, labelAndTextFieldModalDialog.getTextField().getText(), ButtonType.OK);
+                        alert.showAndWait();
+                        }
+                        catch(Exception e){
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Добавить подкатегорию не получилось. \n" + e.getMessage(), ButtonType.OK);
+                            alert.showAndWait();
+                        }
+                    }
+                    
+                }
+        });
         //-------------------------------------------------------- 
          
         // событие при выборе элемента в fishListView
@@ -255,6 +295,40 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                 }
             }
         });
+        
+        fishListView.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY){ //>1 для двойного нажатия //>0 для одинарного
+                    contextMenuFishListView.show(fishListView, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+        
+        contextMenuAddFishInListView.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    LabelAndTextFieldModalDialog labelAndTextFieldModalDialog = 
+                            new LabelAndTextFieldModalDialog(getPrimaryStage(), "Добавить шаблон", 400, 150, "Введите имя шаблона:");
+                    labelAndTextFieldModalDialog.showAndWait();
+                    if(labelAndTextFieldModalDialog.isSuccess()){
+                        try{
+                        mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).addFish(
+                                new Fish(labelAndTextFieldModalDialog.getTextField().getText(), "Пустой шаблон"), 
+                                mainController, fishSubCategoriesListViewSelectionModel.getSelectedItem());
+                        setFishListView();
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, labelAndTextFieldModalDialog.getTextField().getText(), ButtonType.OK);
+                        alert.showAndWait();
+                        }
+                        catch(Exception e){
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Добавить шаблон не получилось. \n" + e.getMessage(), ButtonType.OK);
+                            alert.showAndWait();
+                        }
+                    }
+                    
+                }
+        });
+        
         //------------------------------------------------------------------
         
         // события при сохранении по F10
@@ -280,6 +354,8 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                 }
             }
         });
+        
+        
         
      }
      

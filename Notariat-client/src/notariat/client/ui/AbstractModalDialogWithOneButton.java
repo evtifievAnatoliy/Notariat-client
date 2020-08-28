@@ -22,9 +22,9 @@ import javafx.stage.Stage;
 public class AbstractModalDialogWithOneButton{
     
     private boolean okPressed;
-    BorderPane mainPane;
-    Stage stage;
-    Stage primaryStage;
+    private BorderPane mainPane;
+    private Stage stage;
+    private Stage primaryStage;
     
     public AbstractModalDialogWithOneButton(Stage primaryStage, String title, double WindowWidth, double WindowHeight){
         
@@ -70,5 +70,14 @@ public class AbstractModalDialogWithOneButton{
     public boolean isSuccess(){
         return okPressed;
     }
+
+    public BorderPane getMainPane() {
+        return mainPane;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+    
     
 }

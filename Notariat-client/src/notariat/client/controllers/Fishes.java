@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import notariat.client.models.Fish;
+import notariat.client.models.FishSubCategory;
 import notariat.client.models.KeyMacro;
 
 /**
@@ -34,6 +35,12 @@ public class Fishes {
                 mainController.getFishesReaderWriter().updateFishInMySQL(fish);
             }
         }
+            
+    }
+    
+    public void addFish(Fish addFish, MainController mainController, FishSubCategory fishSubCategory) throws SQLException, IOException{
+        int id = mainController.getFishesReaderWriter().addFishToMySQL(addFish, fishSubCategory.getId());
+        getFishes().add(new Fish(id, addFish.getFish_name(), addFish.getFish_body()));
             
     }
 }

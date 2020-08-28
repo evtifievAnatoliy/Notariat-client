@@ -138,6 +138,42 @@ public class FishesReaderWriter {
         }
         
     }
+    
+    // метод записи Шаблоновв базу данных MySQL
+    public int addFishToMySQL(Fish fish, int subCategoryId){
+          
+        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                        Configuration.getInstance().getProperty("user.Db"),
+                        Configuration.getInstance().getProperty("password.Db"))){
+            int lastFishId = 0;
+            
+            // вставляе запись в таблицу Шаблоны
+            String reportFish = "INSERT INTO fishes (name, body) VALUES (?, ?)";
+            try(PreparedStatement predStat = connection.prepareStatement(reportFish, Statement.RETURN_GENERATED_KEYS)){
+                predStat.setObject(1, fish.getFish_name());
+                predStat.setObject(2, fish.getFish_body());
+                predStat.executeUpdate();
+                // получаем Id последней вставленной записи
+                ResultSet rs = predStat.getGeneratedKeys();
+                if(rs.next())
+                    {
+                        lastFishId = rs.getInt(1);
+                    }
+                }
+            
+                // устанавливаем связь между таблицей Шаблонов и Подкатегория Шаблонов
+                String reportSubCategoryOfCategory = "INSERT INTO fish_subcategories_fishes (subcategory_id, fish_id) VALUES (?, ?)";
+                try(PreparedStatement predStat = connection.prepareStatement(reportSubCategoryOfCategory)){
+                    predStat.setObject(1, subCategoryId);
+                    predStat.setObject(2, lastFishId);
+                    predStat.execute();
+                }
+                return lastFishId;
+        }catch (Exception ex){
+                throw new IllegalArgumentException("Error. Ошибка записи шаблонов в MySql. Шаблон:!!!" + fish.getFish_name() + "\n" + ex.getMessage());
+        }
+        
+    }
 
     //-------------------------------------------
     
