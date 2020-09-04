@@ -15,14 +15,19 @@ public class FishSubCategory {
     private int codVdovkin;
     private String name;
 
-    public FishSubCategory(int id, int categoryId, int codVdovkin, String name) {
-    
-        this.id = id;
+    public FishSubCategory(int categoryId, int codVdovkin, String name) {
+        this.categoryId = categoryId;
         this.codVdovkin = codVdovkin;
         this.name = name;
-        this.categoryId = categoryId;
     }
-
+    
+    public FishSubCategory(int id, int categoryId, int codVdovkin, String name) {
+        this(categoryId, codVdovkin, name);
+        this.id = id;
+        
+    }
+    
+    
     public int getId() {
         return id;
     }

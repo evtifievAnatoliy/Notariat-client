@@ -38,7 +38,7 @@ public class MainController {
             keyMacros = new KeyMacros(keyMacrosReaderWriter.readKeyMacros());
         }
         catch (Exception ex){
-            throw new IllegalArgumentException("Error. Соединение с базой не установлено установлено!!!\n" + ex.getMessage());
+            throw new IllegalArgumentException("Error. Ошибка загрузки шаблонов или макросов\n" + ex.getMessage());
         }
         
         
@@ -49,7 +49,7 @@ public class MainController {
             try {
                 instance = new MainController();
             } catch (Exception ex) {
-                //Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                throw new IllegalArgumentException("Error. Ошибка чтения загрузочных данных!!!\n" + ex.getMessage());
             } 
         }
         return instance;

@@ -5,7 +5,10 @@
  */
 package notariat.client.controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import notariat.client.models.FishCategory;
 import notariat.client.models.FishSubCategory;
 
 /**
@@ -21,5 +24,11 @@ public class FishSubCategories {
 
     public ArrayList<FishSubCategory> getFishSubCategories() {
         return fishSubCategories;
+    }
+    
+    public void addFishSubCategory(FishSubCategory addFishSubCategory, MainController mainController, FishCategory fishCategory) throws SQLException, IOException{
+        int id = mainController.getFishesReaderWriter().addFishSubCategoryToMySQL(addFishSubCategory, fishCategory.getId());
+        getFishSubCategories().add(new FishSubCategory(id, addFishSubCategory.getCategoryId(), addFishSubCategory.getCodVdovkin(), addFishSubCategory.getName()));
+            
     }
 }

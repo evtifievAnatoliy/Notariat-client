@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import notariat.client.controllers.MainController;
 import notariat.client.models.KeyMacro;
+import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.model.RichTextChange;
 
 /**
  *
@@ -66,6 +68,7 @@ public class DocumentTextArea {
         //----------------------------------------------------------------
         
         //инициализация макросов
+        if(mainController.getKeyMacros().getKeyMacros()!=null)
         for (KeyMacro keyMacro: mainController.getKeyMacros().getKeyMacros()){
             if(keyMacro.getKeyCode() != null){
                 KeyCodeCombination codeCombination = new KeyCodeCombination(keyMacro.getKeyCode(), KeyCombination.ALT_DOWN);

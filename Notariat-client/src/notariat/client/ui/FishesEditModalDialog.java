@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Locale;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -58,7 +59,7 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
     private MenuItem contextMenuAddFishInListView;
     private ContextMenu contextMenuSubCategoriesListView;
     private MenuItem contextMenuAddSubCategoriesListView;
-    
+    private FishCategory selectedCategory = null;
     
     Fish choosenFish = null;
     
@@ -186,10 +187,11 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
             menuItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    selectedCategory = mainController.getFishCategories().findFishCategoryByName(menuItem.getText());
                     getFishSubCategoriesListView().getItems().clear();
                     getFishSubCategoriesListView().getItems().addAll(
                             mainController.getFishSubCategories(
-                                    mainController.getFishCategories().findFishCategoryByName(menuItem.getText())).getFishSubCategories());
+                                    selectedCategory).getFishSubCategories());
                     
                     setStackPane(getFishSubCategoriesListView());
                 }
@@ -249,9 +251,13 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                     labelAndTextFieldModalDialog.showAndWait();
                     if(labelAndTextFieldModalDialog.isSuccess()){
                         try{
-                        /
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, labelAndTextFieldModalDialog.getTextField().getText(), ButtonType.OK);
-                        alert.showAndWait();
+                            
+                            mainController.getFishSubCategories(selectedCategory).addFishSubCategory(
+                                    new FishSubCategory(selectedCategory.getId(), 0, labelAndTextFieldModalDialog.getTextField().getText()), 
+                                    mainController, selectedCategory);
+                            
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION, labelAndTextFieldModalDialog.getTextField().getText(), ButtonType.OK);
+                            alert.showAndWait();
                         }
                         catch(Exception e){
                             Alert alert = new Alert(Alert.AlertType.ERROR, "Добавить подкатегорию не получилось. \n" + e.getMessage(), ButtonType.OK);

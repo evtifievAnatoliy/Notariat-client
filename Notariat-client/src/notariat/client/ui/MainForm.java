@@ -63,8 +63,17 @@ public class MainForm {
     private TextArea informationTextArea = new TextArea();
     
     public MainForm(Stage primaryStage)throws Exception {
-    
-        mainController = MainController.getInstance();
+        
+        try{
+            mainController = MainController.getInstance();
+        }
+        catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Не удалось прочитать категории шаблонов из базы данных: \n" + e.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                    //primaryStage.close();
+        }
+        
+        
         
         this.primaryStage = primaryStage;
         Dimension monitorSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -158,7 +167,7 @@ public class MainForm {
             MenuItem menuItem = new MenuItem(categoryFishes.toString());
             this.menuNewDocument.getItems().add(menuItem);
         }
-    
+        
     }
     
     
@@ -283,12 +292,20 @@ public class MainForm {
             menuItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().clear();
-                    splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().addAll(
+                    try{
+                        splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().clear();
+                        splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().addAll(
                             mainController.getFishSubCategories(
                                     mainController.getFishCategories().findFishCategoryByName(menuItem.getText())).getFishSubCategories());
                     
-                    setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                        setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                    }
+                    catch(Exception e){
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Не удалось прочитать категории шаблонов из базы данных: \n" + e.getMessage(), ButtonType.OK);
+                        alert.showAndWait();
+                        primaryStage.close();
+                    }
+                    
                 }
             });
         }

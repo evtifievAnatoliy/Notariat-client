@@ -9,6 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SplitPane;
@@ -124,10 +126,14 @@ public class SplitPaneListFishAndNewDocument{
             public void handle(MouseEvent event) {
                 if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
                     fishListView.getItems().clear();
-                    fishListView.getItems().addAll(mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).getFishes());
-                            
+                    try{
+                        fishListView.getItems().addAll(mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).getFishes());
+                    }
+                    catch(Exception e){
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Не удалось прочитать шаблоны из базы данных: \n" + e.getMessage(), ButtonType.OK);
+                        alert.showAndWait();
                     
-                    
+                    }
                     listStackPane.getChildren().add(fishListView);
                     fishListView.requestFocus();
                 }
@@ -138,8 +144,14 @@ public class SplitPaneListFishAndNewDocument{
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER){ 
                     fishListView.getItems().clear();
-                    fishListView.getItems().addAll(mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).getFishes());
-                      
+                    try{
+                        fishListView.getItems().addAll(mainController.getFishes(fishSubCategoriesListViewSelectionModel.getSelectedItem()).getFishes());
+                    }
+                    catch(Exception e){
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Не удалось прочитать шаблоны из базы данных: \n" + e.getMessage(), ButtonType.OK);
+                        alert.showAndWait();
+                    
+                    }  
                     listStackPane.getChildren().add(fishListView);
                     fishListView.requestFocus();
                 }

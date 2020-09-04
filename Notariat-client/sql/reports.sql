@@ -57,19 +57,29 @@ DELETE FROM fish_subcategories;
 SELECT * FROM fish_subcategories subCategory
     inner join fish_category_subcategories subCategoryOfCategory on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id
     inner join fish_categories category on category.category_id = subCategoryOfCategory.category_id
-    inner join department_fish_category_subcategories dfcs on dfcs.category_subcategories_id = subCategoryOfCategory.id
+    inner join department_fish_categories dfcs on dfcs.category_id = category.category_id
     inner join departments department on department.id = dfcs.department_id
     WHERE category.category_id = 13 AND department.name = 'НК2';
 
-CREATE TABLE department_fish_category_subcategories (
+CREATE TABLE department_fish_categories (
     id int(11) NOT NULL AUTO_INCREMENT,
-    category_subcategories_id int(11) NOT NULL,
+    category_id int(11) NOT NULL,
     department_id int(11) NOT NULL,
     PRIMARY KEY (id)
     );
-INSERT INTO department_fish_category_subcategories (category_subcategories_id, department_id) VALUES (?, ?);
-SELECT * FROM department_fish_category_subcategories;
-DROP TABLE department_fish_category_subcategories;
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (1, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (2, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (3, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (4, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (5, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (6, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (7, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (8, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (9, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (10, 1);
+INSERT INTO department_fish_categories (category_id, department_id) VALUES (11, 1);
+SELECT * FROM department_fish_categories;
+DROP TABLE department_fish_categories;
 
 CREATE TABLE departments(
     id int(11) NOT NULL AUTO_INCREMENT,

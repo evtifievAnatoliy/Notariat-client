@@ -66,8 +66,8 @@ public class FishesReaderWriter {
                                             + "on subCategoryOfCategory.subcategory_id = subCategory.subcategory_id " +
                                         "INNER JOIN fish_categories category "
                                             + "on category.category_id = subCategoryOfCategory.category_id " +
-                                        "INNER JOIN department_fish_category_subcategories dfcs "
-                                            + "on dfcs.category_subcategories_id = subCategoryOfCategory.id " +
+                                        "INNER JOIN department_fish_categories dfcs "
+                                            + "on dfcs.category_id = category.category_id " +
                                         "INNER JOIN departments department " 
                                             + "on department.id = dfcs.department_id " +
                                         "WHERE category.category_id = " + fishCategory.getId()
@@ -87,6 +87,40 @@ public class FishesReaderWriter {
         }
         catch(SQLException ex){
             throw new IllegalArgumentException("Error. Ошибка чтения Категории Шаблонов из базы данных.!!!\n" + ex.getMessage());
+        }
+    }
+    // метод записи Подкатегории шаблонов базу данных MySQL
+    public int addFishSubCategoryToMySQL(FishSubCategory fishSubCategory, int fishCategoryId){
+          
+        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                        Configuration.getInstance().getProperty("user.Db"),
+                        Configuration.getInstance().getProperty("password.Db"))){
+            int lastFishSubCategoryId = 0;
+            
+            // вставляе запись в таблицу Шаблоны
+            String reportFish = "INSERT INTO fish_subcategories (cod_vdovkin, name) VALUES (?, ?)";
+            try(PreparedStatement predStat = connection.prepareStatement(reportFish, Statement.RETURN_GENERATED_KEYS)){
+                predStat.setObject(1, fishSubCategory.getCodVdovkin());
+                predStat.setObject(2, fishSubCategory.getName());
+                predStat.executeUpdate();
+                // получаем Id последней вставленной записи
+                ResultSet rs = predStat.getGeneratedKeys();
+                if(rs.next())
+                    {
+                        lastFishSubCategoryId = rs.getInt(1);
+                    }
+                }
+            
+                // устанавливаем связь между таблицей Шаблонов и Подкатегория Шаблонов
+                String reportSubCategoryOfCategory = "INSERT INTO fish_category_subcategories (category_id, subcategory_id) VALUES (?, ?)";
+                try(PreparedStatement predStat = connection.prepareStatement(reportSubCategoryOfCategory)){
+                    predStat.setObject(1, fishCategoryId);
+                    predStat.setObject(2, lastFishSubCategoryId);
+                    predStat.execute();
+                }
+                return lastFishSubCategoryId;
+        }catch (Exception ex){
+                throw new IllegalArgumentException("Error. Ошибка записи Категории шаблонов в MySql. Категория Шаблонов:!!!" + fishSubCategory.getName() + "\n" + ex.getMessage());
         }
     }
     
@@ -139,7 +173,7 @@ public class FishesReaderWriter {
         
     }
     
-    // метод записи Шаблоновв базу данных MySQL
+    // метод записи Шаблона базу данных MySQL
     public int addFishToMySQL(Fish fish, int subCategoryId){
           
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
@@ -283,18 +317,6 @@ public class FishesReaderWriter {
                     if (Integer.parseInt(strSplitCategory[0]) == fishCategory.getCodVdovkin()){
                             if (lastIdSubCategoryFishes != Integer.parseInt(strSplitCategory[1]))
                             {
-                                
-                                // получаем Id подразделения
-                                int departmentId = 0;
-                                try(Statement st = connection.createStatement()){
-                                    final String findDepartmentId = "SELECT * FROM departments dep WHERE dep.name = '" + 
-                                            Configuration.getInstance().getProperty("department") + "'";
-                                    try (ResultSet rs = st.executeQuery(findDepartmentId)){
-                                        while (rs.next()) {
-                                            departmentId = rs.getInt("id");
-                                        }
-                                    }
-                                }
                                 // вставляе запись в таблицу Подкатегорию Шаблонов
                                 int lastSubcategoryId = 0;
                                 String reportSubCategory = "INSERT INTO fish_subcategories (cod_vdovkin, name) VALUES (?, ?)";
@@ -325,14 +347,6 @@ public class FishesReaderWriter {
                                         lastSubCategoryOfCategoriesId = rs.getInt(1);
                                     }
                                 }
-                                // устанавливаем связь между таблицей Подразделение и FISH_CATEGORY_SUBCATEGORIES
-                                String reportDepartmentSubCategoryOfCategory = "INSERT INTO department_fish_category_subcategories (category_subcategories_id, department_id) VALUES (?, ?)";
-                                try(PreparedStatement predStat = connection.prepareStatement(reportDepartmentSubCategoryOfCategory)){
-                                    predStat.setObject(1, lastSubCategoryOfCategoriesId);
-                                    predStat.setObject(2, departmentId);
-                                    predStat.execute();
-                                }
-                                
                             }
                             lastIdSubCategoryFishes = Integer.parseInt(strSplitCategory[1]);
                     }
