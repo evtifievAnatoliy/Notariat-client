@@ -277,8 +277,10 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                 if (event.getClickCount() >1){ //>1 для двойного нажатия //>0 для одинарного
                     // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
                     choosenFish = fishListViewSelectionModel.getSelectedItem();
-                    newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
-                    newDocumentTextArea.getDocumentTextArea().requestFocus();
+                    if(choosenFish != null){
+                        newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
+                        newDocumentTextArea.getDocumentTextArea().requestFocus();
+                    }
                 }
             }
         });
@@ -288,8 +290,10 @@ public class FishesEditModalDialog  extends AbstractModalDialogWithOneButton{
                 if (event.getCode() == KeyCode.ENTER){ 
                     // пока в newDocumentTextArea пишем название выбранной рыбы, в будущем нужно вставлять саму рыбу(шаблон документа)
                     choosenFish = fishListViewSelectionModel.getSelectedItem();
-                    newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
-                    newDocumentTextArea.getDocumentTextArea().requestFocus();
+                    if(choosenFish != null){
+                        newDocumentTextArea.getDocumentTextArea().setText(fishListViewSelectionModel.getSelectedItem().getFish_body());
+                        newDocumentTextArea.getDocumentTextArea().requestFocus();
+                    }
                 }
             }
         });

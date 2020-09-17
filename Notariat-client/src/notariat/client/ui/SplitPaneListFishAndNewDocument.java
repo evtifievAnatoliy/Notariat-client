@@ -57,7 +57,7 @@ public class SplitPaneListFishAndNewDocument{
         fishListView = new ListView<Fish>();
         fishListView.setItems(fishesArray);
         // ------------------------------------
-        newDocumentTextArea = new DocumentTextArea(mainWindowWidth) {
+        newDocumentTextArea = new DocumentTextArea(mainForm, mainWindowWidth) {
             @Override
             public void keyEventEscape() {
                 getDocumentTextArea().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
@@ -111,8 +111,8 @@ public class SplitPaneListFishAndNewDocument{
         fishListView.setMinWidth(fishListViewWight);
         fishListView.setMaxWidth(fishListViewWight);
         double textAreaWight = fishListViewWight/2*7;
-        newDocumentTextArea.getDocumentTextArea().setMinWidth(textAreaWight);
-        newDocumentTextArea.getDocumentTextArea().setMaxWidth(textAreaWight);
+        newDocumentTextArea.setSizeOfComponents(textAreaWight);
+        newDocumentTextArea.setSizeOfComponents(textAreaWight);
         splitPaneListFishesAndNewDocument.setDividerPositions(fishListViewWight);
         //-------------------------------------------------------
     }

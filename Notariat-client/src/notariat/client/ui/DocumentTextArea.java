@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import notariat.client.controllers.MainController;
 import notariat.client.models.KeyMacro;
 import org.fxmisc.richtext.StyledTextArea;
@@ -39,6 +40,7 @@ public class DocumentTextArea {
         documentTextArea = new TextArea();
         
         setSizeOfComponents(mainWindowWidth);
+        setStileOfComponents(22);
         initializationOfAllActionListeners();
     }
     
@@ -56,9 +58,25 @@ public class DocumentTextArea {
     
     public void setSizeOfComponents(double windowWight){
         
-        documentTextArea.setMinWidth(windowWight/10*7);
-        documentTextArea.setMaxWidth(windowWight/10*7);
+//        documentTextArea.setMinWidth(windowWight/10*7);
+//        documentTextArea.setMaxWidth(windowWight/10*7);
+        documentTextArea.setMinWidth(15*68);
+        documentTextArea.setMaxWidth(15*68);
     
+    }
+    
+    public void setStileOfComponents(int size){
+        
+        documentTextArea.setStyle("-fx-font-family: 'Courier'; -fx-font-weight: 200; -fx-font-size: " + size);
+        //Styles: 'serif' (e.g., Times)
+                //'sans-serif' (e.g., Helvetica)
+                //'cursive' (e.g., Zapf-Chancery)
+                //'fantasy' (e.g., Western)
+                //'monospace' (e.g., Courier)
+        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html#typefont
+        
+        documentTextArea.setWrapText(true); // перенос символов в стрроке по завершению строчки
+        
     }
     
     private void initializationOfAllActionListeners(){
@@ -86,11 +104,23 @@ public class DocumentTextArea {
         }
         
         //событие по изменению фокуса
-        documentTextArea.focusedProperty().addListener( (obs, oldValue, newValue) -> {
-        if (newValue) { /* при получении фокуса */ }
-        else { /* при потере */ 
-            documentTextArea.clear();
-        }
+//        documentTextArea.focusedProperty().addListener( (obs, oldValue, newValue) -> {
+//        if (newValue) { /* при получении фокуса */ }
+//        else { /* при потере */ 
+//            documentTextArea.clear();
+//        }
+//        });
+        
+        documentTextArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>(){  //по нажатию Escape
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.F10){ 
+                    
+                    //mainForm.removeLastStackPane();
+                    mainForm.getDocumentHTMLArea().setTextTODocumentHTMLArea(documentTextArea.getText().replaceAll("\n", "<br>"));
+                    mainForm.setStackPane(mainForm.getDocumentHTMLArea().getDocumentHTMLArea());
+                }
+            }
         });
         
     }

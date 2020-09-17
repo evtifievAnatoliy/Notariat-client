@@ -59,7 +59,8 @@ public class MainForm {
     
     private SplitPaneListFishAndNewDocument splitPaneListFishAndNewDocument;
     private WorkDayTableView workDayTableView;
-    private DocumentTextArea documentFromBaseTextArea;
+    private DocumentTextArea documentTextArea;
+    private DocumentHTMLArea documentHTMLArea;
     private TextArea informationTextArea = new TextArea();
     
     public MainForm(Stage primaryStage)throws Exception {
@@ -135,8 +136,11 @@ public class MainForm {
         // отрисовываем слой База рабочего дня 
         workDayTableView = new WorkDayTableView(this, mainWindowWidth);
         
-        // отрисовываем слой documentFromBaseTextArea
-        documentFromBaseTextArea = new DocumentTextArea(this, mainWindowWidth);
+        // отрисовываем слой documentTextArea
+        documentTextArea = new DocumentTextArea(this, mainWindowWidth);
+        
+        // отрисовываем слой documentHTMLArea
+        documentHTMLArea = new DocumentHTMLArea(this, mainWindowWidth);
         
         mainStackPane = new StackPane();
         //----------------------------------------------
@@ -154,13 +158,24 @@ public class MainForm {
         primaryStage.show();
     }
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+    
+    
+    
     public StackPane getMainStackPane() {
         return mainStackPane;
     }
 
     public DocumentTextArea getDocumentFromBaseTextArea() {
-        return documentFromBaseTextArea;
+        return documentTextArea;
     }
+
+    public DocumentHTMLArea getDocumentHTMLArea() {
+        return documentHTMLArea;
+    }
+    
 
     public void setMenuNewDocument(ArrayList<FishCategory> categoriesFisheses) {
         for (FishCategory categoryFishes : categoriesFisheses){
@@ -177,8 +192,12 @@ public class MainForm {
         // устанавливаем размеры компонентов слоя Новый документ
         splitPaneListFishAndNewDocument.setSizeOfComponents(windowWight);
         
-        // устанавливаем размеры компонентов слоя documentFromBaseTextArea
-        documentFromBaseTextArea.setSizeOfComponents(windowWight);
+        // устанавливаем размеры компонентов слоя documentTextArea
+        documentTextArea.setSizeOfComponents(windowWight);
+    
+        // устанавливаем размеры компонентов слоя documentHTMLArea
+        documentHTMLArea.setSizeOfComponents(windowWight);
+    
         
         // устанавливаем размеры компонентов слоя  workDayTableView
         workDayTableView.setSizeOfComponents(windowWight);

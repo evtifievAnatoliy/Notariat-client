@@ -112,7 +112,7 @@ INSERT INTO fishes (name, body) VALUES ('','');
 DROP TABLE fishes;
 SELECT * FROM fishes fishes
     inner join fish_subcategories_fishes fsf on fishes.fish_id = fsf.fish_id
-    inner join fish_subcategories fs on fs.subcategory_id = fsf.subcategory_id
+    inner join fish_subcategories fs on fs.subcategory_id = fsf.subcategory_id;
     WHERE fs.subcategory_id = 335;
 
 CREATE TABLE keyMacros(
