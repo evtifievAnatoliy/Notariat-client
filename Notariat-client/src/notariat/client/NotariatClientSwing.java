@@ -6,31 +6,27 @@
 package notariat.client;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import notariat.client.ui.MainForm;
-
+import notariat.client.uiSwing.MainForm;
 /**
  *
  * @author eag
  */
-
-public class NotariatClient extends Application{
+public class NotariatClientSwing{
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Application.launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+        
         try{
-            MainForm mainForm = new MainForm(primaryStage);
+            MainForm mainForm = new MainForm();
         }
-        catch(Exception ex){
-            System.out.println("Error:" + ex.getMessage());
+        catch(Exception e){
+            // запись в лог
+            
         }
     }
 
+    
     
 }

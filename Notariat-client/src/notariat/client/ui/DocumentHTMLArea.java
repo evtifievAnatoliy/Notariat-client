@@ -20,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
@@ -81,7 +82,8 @@ public class DocumentHTMLArea {
     
     
     public void setTextTODocumentHTMLArea(String text){
-        documentHTMLArea.setHtmlText("<font face='courier' size=5>" 
+        
+        documentHTMLArea.setHtmlText("<font face='courier' size=5 >" 
                                         + text 
                                         + "</font>");
     }
@@ -101,9 +103,9 @@ public class DocumentHTMLArea {
                     @Override
                     public void handle(KeyEvent event) {
                         if (codeCombination.match(event) && event.getSource() == documentHTMLArea){
-                            /*int position = documentTextArea.getCaretPosition();
-                            documentTextArea.insertText(position, keyMacro.getMacro_body());
-                            documentTextArea.positionCaret(position);*/
+                            //int position = webview.getEngine().
+//                            documentTextArea.insertText(position, keyMacro.getMacro_body());
+//                            documentTextArea.positionCaret(position);*/
                             ;
                         }}
                 });
@@ -150,6 +152,7 @@ public class DocumentHTMLArea {
 //                }
 //            }
         });
+        
         
         
     }

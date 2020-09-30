@@ -75,6 +75,7 @@ public class DocumentTextArea {
                 //'monospace' (e.g., Courier)
         //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html#typefont
         
+        
         documentTextArea.setWrapText(true); // перенос символов в стрроке по завершению строчки
         
     }

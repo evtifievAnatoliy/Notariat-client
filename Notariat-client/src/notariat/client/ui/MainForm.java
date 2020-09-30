@@ -158,6 +158,7 @@ public class MainForm {
         primaryStage.show();
     }
 
+    
     public Stage getPrimaryStage() {
         return primaryStage;
     }
