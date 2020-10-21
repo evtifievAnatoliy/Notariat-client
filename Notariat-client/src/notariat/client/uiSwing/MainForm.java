@@ -7,10 +7,12 @@ package notariat.client.uiSwing;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +25,8 @@ import javafx.scene.control.MenuItem;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
@@ -59,7 +63,11 @@ public class MainForm extends JFrame{
     private JMenuItem menuItemSettingsKeyMacros;
     private JMenuItem menuItemSettingsFishes;
     private JMenuItem menuItemExit;
+    private JMenuBar menuBar; 
     private JPanel mainPanel;
+    private CardLayout mainPanelCardLayout;
+    
+    private SplitPaneListFishAndNewDocument splitPaneListFishAndNewDocument;
     
     public MainForm() throws IOException{
         
@@ -84,7 +92,7 @@ public class MainForm extends JFrame{
         mainFont = new Font("TimesRoman",Font.HANGING_BASELINE,12);
         
         // отрисовываем меню
-        JMenuBar menuBar = new JMenuBar();
+        menuBar = new JMenuBar();
         menuBar.add(Box.createHorizontalBox());
         menuNewDocument = new JMenu("Новый документ (F3)");
         menuNewDocument.setFont(mainFont);
@@ -124,17 +132,24 @@ public class MainForm extends JFrame{
         menuBar.add(menuExit);
         
         mainPanel = new JPanel();
-        mainPanel.setLayout(new CardLayout());
         mainPanel.setFocusable(true);
-        JLabel jLabel = new JLabel("Hello");
-        mainPanel.add( jLabel);
+        DocumentTextArea documentTextArea = new DocumentTextArea(this,monitorSize);
+        
+        // отрисовываем элементы компановки StackPane. Окна будут находится на разных слоях
+                
+        // отрисовываем слой Новый документ
+        splitPaneListFishAndNewDocument = new SplitPaneListFishAndNewDocument(this, monitorSize);
+ //       setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+        //setStackPane(new JScrollPane(documentTextArea.getDocumentTextArea()));
+
         
         setJMenuBar(menuBar);
-        container.add(mainPanel);
         
+        setStackPane(new JLabel(""));
         // Открытие окна
         
         initializationOfAllActionListeners();
+        
         
         setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
@@ -150,10 +165,25 @@ public class MainForm extends JFrame{
         
     }
     
-    public void setStackPane(JPanel jpanel){
-        if (mainPanel.getComponentCount() > 0)
-            mainPanel.getLayout().removeLayoutComponent(mainPanel.get);
-        mainStackPane.getChildren().add(node);
+    public void setStackPane(JComponent jComponent){
+        
+        mainPanel.add(jComponent, BorderLayout.CENTER);
+        container.add(mainPanel);
+        container.revalidate();
+        container.repaint();
+    }
+    public void removeLastStackPane() {
+            if (mainPanel.getComponentCount() > 0){
+                Component[] components = mainPanel.getComponents();
+                for (int i=0; i<components.length; i++)
+                    mainPanel.remove(components[i]);
+                
+                container.remove(mainPanel);
+                setStackPane(new JLabel(""));
+                container.revalidate();
+                container.repaint();
+            }
+        
     }
     
     private void initializationOfAllActionListeners(){
@@ -249,7 +279,6 @@ public class MainForm extends JFrame{
         mainPanel.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent ke) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -261,30 +290,36 @@ public class MainForm extends JFrame{
 
             @Override
             public void keyReleased(KeyEvent ke) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
             });
         
-        for(int i=0 ; i<menuNewDocument.getItemCount(); i++)
-            menuNewDocument.getItem(i).addActionListener(new ActionListener() {
+        //JMenuItem[] jMenuItems = menuNewDocument.getI
+        
+        for(int i=0 ; i<menuNewDocument.getItemCount(); i++){
+            JMenuItem jMenuItem =  menuNewDocument.getItem(i);
+            jMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try{
-//                        splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().clear();
-//                        splitPaneListFishAndNewDocument.getFishSubCategoriesListView().getItems().addAll(
-//                            mainController.getFishSubCategories(
-//                                    mainController.getFishCategories().findFishCategoryByName(menuItem.getText())).getFishSubCategories());
-//                    
-//                        setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                        splitPaneListFishAndNewDocument.removeElementsFromFishSubCategoriesListView();
+                        splitPaneListFishAndNewDocument.addElementsToFishSubCategoriesListView(
+                            mainController.getFishSubCategories(
+                                    mainController.getFishCategories().findFishCategoryByName(jMenuItem.getText())).getFishSubCategories());
+                        JOptionPane.showMessageDialog(getContentPane(), "Шаблоны: \n" + 
+                                jMenuItem.getText(), "Шаблон:", JOptionPane.INFORMATION_MESSAGE);
+                        setStackPane(splitPaneListFishAndNewDocument.getSplitPaneListFishesAndNewDocument());
+                        container.revalidate();
+                        container.repaint();
+                        
                     }
                     catch(Exception e){
-//                        Alert alert = new Alert(Alert.AlertType.ERROR, "Не удалось прочитать категории шаблонов из базы данных: \n" + e.getMessage(), ButtonType.OK);
-//                        alert.showAndWait();
-//                        primaryStage.close();
+                        JOptionPane.showMessageDialog(getContentPane(), "Не удалось прочитать категории шаблонов из базы данных: \n" 
+                                + e.getMessage(), "Error:", JOptionPane.ERROR_MESSAGE);
                     }
             }
+        
         }); 
-        }
+    }    
         //----------------------------------------------------------------
         /*
         // события при нажатии меню "База рабочего дня"
@@ -318,17 +353,7 @@ public class MainForm extends JFrame{
     }
     
     
-//    public void setStackPane(JPanel jpanel){
-//            if (mainStackPane.getChildren() != null)
-//                mainStackPane.getChildren().clear();
-//            mainStackPane.getChildren().add(node);
-//    }
-    /*
-    public void removeLastStackPane() {
-            if (mainStackPane.getChildren().size() > 0)
-                mainStackPane.getChildren().remove(mainStackPane.getChildren().size()-1);
-            
-    }
+/*
     
     //метод загрузки шадлонов и рыб от Вдовкина в MySql
     private void loadFishSubCategoriesFromVdovkinToMySql(ArrayList<FishCategory> fishCategories) {
